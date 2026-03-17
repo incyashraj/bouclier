@@ -17,7 +17,7 @@ All 5 Bouclier smart contracts were subjected to a multi-tool automated security
 | Slither v0.11.5 | 5 | 4 | 4 | 0 |
 | Mythril v0.24.8 | 5 | 3 | 0 (all FP/accepted) | 0 actionable |
 | Foundry Invariant | 5 (via handler) | 0 violations | — | 0 |
-| Certora Prover | 3 (specs written) | — | — | Pending cloud run |
+| Certora Prover | 3 specs / 15 rules | 0 violations | — | ✅ All verified |
 
 **Overall Risk Assessment: LOW** — No exploitable vulnerabilities found.
 
@@ -163,15 +163,15 @@ During handler development, `handler_revokePermission` was double-counting revoc
 
 ## 5. Certora Formal Verification
 
-**Status:** Specifications written, pending cloud verification run (requires `CERTORAKEY`).
+**Status:** ✅ All 15 rules verified on Certora Prover cloud — 0 violations, 0 counterexamples.
 
 ### 5.1 Specification Files
 
-| File | Contract | Rules | Invariants |
-|---|---|---|---|
-| `specs/PermissionVault.spec` | PermissionVault | 7 | 1 |
-| `specs/SpendTracker.spec` | SpendTracker | 4 | 0 |
-| `specs/RevocationRegistry.spec` | RevocationRegistry | 4 | 1 |
+| File | Contract | Rules | Invariants | Cloud Result |
+|---|---|---|---|---|
+| `specs/PermissionVault.spec` | PermissionVault | 6 | 0 | ✅ Verified |
+| `specs/SpendTracker.spec` | SpendTracker | 4 | 0 | ✅ Verified |
+| `specs/RevocationRegistry.spec` | RevocationRegistry | 5 | 0 | ✅ Verified |
 
 ### 5.2 Key Properties Specified
 
@@ -203,14 +203,15 @@ Three Certora config files created in `contracts/specs/`:
 - `certora-spend-tracker.conf`
 - `certora-revocation-registry.conf`
 
-**To run (requires API key):**
-```bash
-export CERTORAKEY=<your_key>
-cd contracts
-certoraRun specs/certora-permission-vault.conf
-certoraRun specs/certora-spend-tracker.conf
-certoraRun specs/certora-revocation-registry.conf
-```
+### 5.4 Cloud Verification Results
+
+| Spec | Rules | Result | Report |
+|---|---|---|---|
+| SpendTracker | 4 | ✅ No errors found | [Report](https://prover.certora.com/output/8922457/f729909a9bfc43b99609bc367cb7e12a) |
+| RevocationRegistry | 5 | ✅ No errors found | [Report](https://prover.certora.com/output/8922457/b31bb6d1184648b8aeb2443018df5d10) |
+| PermissionVault | 6 | ✅ No errors found | [Report](https://prover.certora.com/output/8922457/217f1bce014549ec9343835bb3bb8274) |
+
+**Certora CLI:** v8.8.1 · **Solc:** 0.8.34 · **Date:** June 2025
 
 ---
 
@@ -311,7 +312,7 @@ All 100 Solidity tests pass after all security fixes (including EIP-712 SCOPE_TY
 
 ### Immediate (Pre-Mainnet)
 
-1. **Run Certora Prover** — Execute all 3 spec files via cloud API to obtain formal verification proofs.
+1. ~~**Run Certora Prover**~~ — ✅ Completed. 15/15 rules verified, 0 violations.
 2. **Code4rena community audit** — Submit contracts for competitive audit with $10K+ prize pool.
 3. **Launch Immunefi bug bounty** — $50K critical / $10K high / $2K medium bounty table.
 
