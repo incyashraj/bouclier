@@ -50,6 +50,11 @@ const bouclier = new BouclierClient({
 const agentId = await bouclier.getAgentId("0xAgentWallet");
 const isRevoked = await bouclier.isRevoked(agentId);
 const scope = await bouclier.getActiveScope(agentId);
+
+// Query audit trail — everything this agent did
+const eventIds = await bouclier.getAgentHistory(agentId, 0n, 50n);
+const record = await bouclier.getAuditRecord(eventIds[0]);
+console.log(record.target, record.allowed, record.timestamp);
 ```
 
 ### Register and monitor an agent — Python
@@ -64,6 +69,11 @@ from bouclier import BouclierClient
 client = BouclierClient(rpc_url="https://sepolia.base.org")
 agent_id = client.get_agent_id("0xAgentWallet")
 scope = client.get_active_scope(agent_id)
+
+# Full audit trail — returns hydrated AuditRecord objects
+trail = client.get_audit_trail(agent_id, offset=0, limit=100)
+for event in trail:
+    print(event.target, event.allowed, event.usd_amount)
 ```
 
 ### Framework integrations
@@ -169,6 +179,23 @@ All contracts are source-verified on Basescan. Solidity 0.8.24, built with Found
 | `@bouclier/eliza-plugin` | TypeScript | `npm install @bouclier/eliza-plugin` |
 | `@bouclier/agentkit` | TypeScript | `npm install @bouclier/agentkit` |
 | `bouclier-sdk` | Python | `pip install bouclier-sdk` |
+
+---
+
+## Bouclier vs Alternatives
+
+| | Bouclier | Safe Guards | Fireblocks / Fordefi | Roll your own |
+|---|---|---|---|---|
+| **Agent-native identity** | On-chain DID per agent with hierarchy | No — guards are per-Safe, not per-agent | Off-chain API keys | Manual mapping |
+| **Permission scopes** | EIP-712 signed, on-chain enforced (protocols, assets, caps, expiry) | Transaction-level checks only — no scoped grants | Proprietary policy engine, off-chain | Custom modifiers |
+| **Spend limits** | Rolling-window with Chainlink oracles, USD-denominated | ETH-only or no native support | USD limits but custodial | Self-built |
+| **Revocation** | Instant emergency + 24h timelock, on-chain registry | Remove guard (admin tx) | API call (centralized) | Custom |
+| **Audit trail** | Every action hashed on-chain + IPFS anchoring | Events only | Centralized logs | Whatever you build |
+| **Modular accounts** | ERC-7579 validator module — composable with any modular account | Safe-only | Vendor lock-in | N/A |
+| **Open source** | Yes — MIT license, permissionless | Guard logic open, but Safe-coupled | No | N/A |
+| **Multi-framework** | LangChain, AgentKit, ELIZA integrations | None | None | Manual |
+
+Safe Guards solve transaction filtering for multisigs. Custodial MPC vaults (Fireblocks, Fordefi) solve key management. Bouclier solves **agent permission management** — scoped identity, enforcement, audit, and revocation as a composable on-chain protocol that works across any ERC-4337/7579 account and any agent framework.
 
 ---
 
