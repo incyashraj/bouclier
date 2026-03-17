@@ -59,16 +59,18 @@ export PRIVATE_KEY=0x_YOUR_PRIVATE_KEY_HERE
 
 # Register an AI agent on Base Sepolia
 cast send 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
-  "registerAgent(string,string,address)" \\
-  "did:bouclier:demo-agent-001" \\
+  "register(address,string,bytes32,string)" \\
+  0x1111000000000000000000000000000000000001 \\
   "gpt-4-turbo" \\
-  0x0000000000000000000000000000000000000001 \\
+  0x0000000000000000000000000000000000000000000000000000000000000000 \\
+  "" \\
   --rpc-url https://sepolia.base.org \\
   --private-key $PRIVATE_KEY
 
-# Get your agent ID (keccak256 of the DID)
-cast keccak "did:bouclier:demo-agent-001"
-# Save this bytes32 hash — you'll paste it in the dashboard`}</Pre>
+# Get your agent IDs (owned by your wallet)
+cast call 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
+  "getAgentsByOwner(address)(bytes32[])" YOUR_WALLET_ADDRESS \\
+  --rpc-url https://sepolia.base.org`}</Pre>
           <p className="text-xs text-text-muted mt-2">
             Tip: Use a memorable DID like <Code>did:bouclier:demo-agent-001</Code> for the video.
           </p>
@@ -160,15 +162,16 @@ cast keccak "did:bouclier:demo-agent-001"
           </p>
           <Pre>{`# 1. Register agent
 cast send 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
-  "registerAgent(string,string,address)" \\
-  "did:bouclier:test-$(date +%s)" "gpt-4" \\
-  0x0000000000000000000000000000000000000001 \\
+  "register(address,string,bytes32,string)" \\
+  0x4444000000000000000000000000000000000004 \\
+  "gpt-4" \\
+  0x0000000000000000000000000000000000000000000000000000000000000000 \\
+  "" \\
   --rpc-url https://sepolia.base.org --private-key $PRIVATE_KEY
 
 # 2. Check registration
-AGENT_ID=$(cast keccak "did:bouclier:test-$(date +%s)")
 cast call 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
-  "resolve(bytes32)" $AGENT_ID \\
+  "getAgentsByOwner(address)(bytes32[])" YOUR_WALLET \\
   --rpc-url https://sepolia.base.org
 
 # 3. Run the Foundry E2E test suite (139+ tests)

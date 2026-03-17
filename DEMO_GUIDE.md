@@ -16,15 +16,16 @@
 ### 1. Register an AI Agent via CLI
 
 ```bash
-export PRIVATE_KEY=0x_YOUR_WALLET_PRIVATE_KEY
+export PRIVATE_KEY=0x_YOUR_PRIVATE_KEY_HERE
 
-# Register agent with a memorable DID
+# Register agent — use a unique wallet address per agent
 cast send 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \
-  "registerAgent(string,string,address)" \
-  "did:bouclier:demo-agent-001" \
+  "register(address,string,bytes32,string)" \
+  0x1111000000000000000000000000000000000001 \
   "gpt-4-turbo" \
-  0x0000000000000000000000000000000000000001 \
-  --rpc-url https://sepolia.base.org \
+  0x0000000000000000000000000000000000000000000000000000000000000000 \
+  "" \
+  --rpc-url https://base-sepolia.g.alchemy.com/v2/YOUR_KEY \
   --private-key $PRIVATE_KEY
 ```
 
