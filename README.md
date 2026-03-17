@@ -129,12 +129,12 @@ Bouclier is **open-source and permissionless**. The core protocol will always be
 | Policy deployment | Gas only | Included | Included |
 | On-chain verification | Gas only | Included | Included |
 | Audit trail | On-chain | On-chain + indexed API | On-chain + dedicated API |
-| Managed sentinel nodes | — | | Dedicated |
-| Compliance dashboard | — | | White-label |
-| Monitoring & alerts | — | | Custom rules |
-| Compliance reports (MiCA, MAS) | — | — | |
-| Custom policy development | — | — | |
-| SLA & priority support | — | — | |
+| Managed sentinel nodes | — | Included | Dedicated |
+| Compliance dashboard | — | Included | White-label |
+| Monitoring & alerts | — | Included | Custom rules |
+| Compliance reports (MiCA, MAS) | — | — | Included |
+| Custom policy development | — | — | Included |
+| SLA & priority support | — | — | Included |
 
 **Open Protocol** — Self-host everything. Deploy contracts, run your own nodes, use the SDKs. You pay only gas on Base L2 (typically < $0.01 per transaction).
 
