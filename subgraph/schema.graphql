@@ -1,0 +1,88 @@
+type Agent @entity {
+  id: ID! # bytes32 agentId (hex)
+  wallet: Bytes! # agent EOA
+  owner: Bytes! # owner EOA
+  model: String!
+  metadataCID: String!
+  parentAgentId: Bytes # bytes32, zero if root
+  status: Int! # 0=ACTIVE, 1=PAUSED, 2=DEACTIVATED
+  registeredAt: BigInt!
+  updatedAt: BigInt!
+
+  permissionGrants: [PermissionGrant!]! @derivedFrom(field: "agent")
+  revocationEvents: [RevocationEvent!]! @derivedFrom(field: "agent")
+  auditEvents: [AuditEvent!]! @derivedFrom(field: "agent")
+  spendRecords: [SpendRecord!]! @derivedFrom(field: "agent")
+  violations: [PermissionViolation!]! @derivedFrom(field: "agent")
+}
+
+type PermissionGrant @entity {
+  id: ID! # agentId + "-" + scopeHash
+  agent: Agent!
+  agentId: Bytes!
+  scopeHash: Bytes!
+  validUntil: BigInt!
+  revokedAt: BigInt # null if still active
+  revokedBy: Bytes # null if still active
+  grantedAt: BigInt!
+  active: Boolean!
+}
+
+type RevocationEvent @entity {
+  id: ID! # txHash + "-" + logIndex
+  agent: Agent!
+  agentId: Bytes!
+  level: Int! # RevocationLevel enum: 0=SCOPE, 1=AGENT, 2=EMERGENCY
+  reason: String!
+  revokedBy: Bytes!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  txHash: Bytes!
+}
+
+type PermissionViolation @entity {
+  id: ID! # txHash + "-" + logIndex
+  agent: Agent!
+  agentId: Bytes!
+  caller: Bytes!
+  selector: Bytes! # bytes4
+  reason: String!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  txHash: Bytes!
+}
+
+type AuditEvent @entity {
+  id: ID! # txHash + "-" + logIndex
+  agent: Agent!
+  agentId: Bytes!
+  actionId: Bytes! # bytes32
+  target: Bytes!
+  selector: Bytes! # bytes4
+  allowed: Boolean!
+  value: BigInt!
+  ipfsCID: String # set on IPFSCIDAdded event
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  txHash: Bytes!
+}
+
+type SpendRecord @entity {
+  id: ID! # txHash + "-" + logIndex
+  agent: Agent!
+  agentId: Bytes!
+  amount: BigInt!
+  windowStart: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  txHash: Bytes!
+}
+
+# Aggregate spend window per agent for rolling totals
+type AgentDailySpend @entity {
+  id: ID! # agentId + "-" + windowStart
+  agentId: Bytes!
+  windowStart: BigInt!
+  totalSpend: BigInt!
+  txCount: BigInt!
+}

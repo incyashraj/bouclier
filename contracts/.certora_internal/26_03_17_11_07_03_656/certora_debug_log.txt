@@ -1,0 +1,3 @@
+`solc_map` is deprecated, use `compiler_map` instead
+All source files will be compiled with the same compiler. solc/vyper attribute can be used instead
+Saving last configuration file to .certora_internal/26_03_17_11_07_03_656/run.conf

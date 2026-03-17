@@ -1,0 +1,50 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/.github/
+contracts/broadcast/*/31337/
+
+# Node / Bun
+node_modules/
+packages/*/node_modules/
+packages/*/dist/
+packages/*/.turbo/
+.bun/
+
+# Python
+python-sdk/__pycache__/
+python-sdk/*.egg-info/
+python-sdk/dist/
+python-sdk/.venv/
+**/__pycache__/
+**/*.pyc
+
+# Build artifacts
+dist/
+build/
+.next/
+out/
+
+# Virtual environments
+.venv/
+
+# IDE
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.swp
+
+# Coverage
+coverage/
+lcov.info
+htmlcov/
+
+# Secrets
+*.pem
+*.key

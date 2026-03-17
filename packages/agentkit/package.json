@@ -1,0 +1,43 @@
+{
+  "name": "@bouclier/agentkit",
+  "version": "0.1.0",
+  "description": "Coinbase AgentKit wrapper that enforces Bouclier permission scopes on wallet operations",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bouclier-protocol/bouclier"
+  },
+  "keywords": [
+    "agentkit",
+    "coinbase",
+    "ai-agents",
+    "permissions",
+    "bouclier"
+  ],
+  "files": [
+    "dist",
+    "src"
+  ],
+  "module": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "@coinbase/agentkit": ">=0.1.0"
+  },
+  "devDependencies": {
+    "@bouclier/sdk": "file:../sdk",
+    "@types/bun": "latest",
+    "typescript": "^5"
+  }
+}

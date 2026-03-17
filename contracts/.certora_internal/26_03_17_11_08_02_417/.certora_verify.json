@@ -1,0 +1,8 @@
+{
+    "importFilesToOrigRelpaths": {},
+    "primary_contract": "PermissionVault",
+    "specfile": "/Users/yashrajpardeshi/Projects/Bouclier/contracts/specs/PermissionVault.spec",
+    "specfileOrigRelpath": "specs/PermissionVault.spec",
+    "specfilesToImportDecls": {},
+    "type": "spec"
+}

@@ -1,0 +1,369 @@
+
+> @bouclier/dashboard@0.1.0 dev
+> next dev --turbopack
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/yashrajpardeshi/Projects/Bouclier/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/yashrajpardeshi/Projects/Bouclier/dashboard/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.122:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 484ms
+ReferenceError: indexedDB is not defined
+    at getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7767:247)
+    at _.getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7803:40)
+    at O (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7865:30)
+    at new h (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7900:13)
+    at new Te (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_core_dist_index_es_0675d5e3.js:3126:662)
+    at new Ee (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2367:32)
+    at Ee.init (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2370:19)
+    at B.createClient (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13964:254)
+    at B.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13960:54)
+    at B.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13858:24)
+    at b.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14513:365)
+    at b.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14320:24)
+⨯ unhandledRejection: ReferenceError: indexedDB is not defined
+    at getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7767:247)
+    at _.getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7803:40)
+    at O (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7865:30)
+    at new h (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7900:13)
+    at new Te (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_core_dist_index_es_0675d5e3.js:3126:662)
+    at new Ee (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2367:32)
+    at Ee.init (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2370:19)
+    at B.createClient (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13964:254)
+    at B.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13960:54)
+    at B.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13858:24)
+    at b.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14513:365)
+    at b.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14320:24)
+⨯ unhandledRejection:  ReferenceError: indexedDB is not defined
+    at getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7767:247)
+    at _.getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7803:40)
+    at O (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7865:30)
+    at new h (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7900:13)
+    at new Te (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_core_dist_index_es_0675d5e3.js:3126:662)
+    at new Ee (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2367:32)
+    at Ee.init (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2370:19)
+    at B.createClient (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13964:254)
+    at B.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13960:54)
+    at B.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13858:24)
+    at b.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14513:365)
+    at b.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14320:24)
+ReferenceError: indexedDB is not defined
+    at getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7767:247)
+    at _.getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7803:40)
+    at O (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7865:30)
+    at new h (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7900:13)
+    at new Te (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_core_dist_index_es_0675d5e3.js:3126:662)
+    at new Ee (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2367:32)
+    at Ee.init (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2370:19)
+    at B.createClient (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13964:254)
+    at B.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13960:54)
+    at B.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13858:24)
+    at b.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14513:365)
+    at b.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14320:24)
+⨯ unhandledRejection: ReferenceError: indexedDB is not defined
+    at getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7767:247)
+    at _.getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7803:40)
+    at O (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7865:30)
+    at new h (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7900:13)
+    at new Te (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_core_dist_index_es_0675d5e3.js:3126:662)
+    at new Ee (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2367:32)
+    at Ee.init (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2370:19)
+    at B.createClient (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13964:254)
+    at B.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13960:54)
+    at B.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13858:24)
+    at b.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14513:365)
+    at b.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14320:24)
+⨯ unhandledRejection:  ReferenceError: indexedDB is not defined
+    at getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7767:247)
+    at _.getItem (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7803:40)
+    at O (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7865:30)
+    at new h (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:7900:13)
+    at new Te (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_core_dist_index_es_0675d5e3.js:3126:662)
+    at new Ee (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2367:32)
+    at Ee.init (.next/dev/server/chunks/ssr/9f1d4_@walletconnect_sign-client_dist_index_es_c87a12c3.js:2370:19)
+    at B.createClient (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13964:254)
+    at B.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13960:54)
+    at B.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:13858:24)
+    at b.initialize (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14513:365)
+    at b.init (.next/dev/server/chunks/ssr/[root-of-the-server]__65692f72._.js:14320:24)
+ GET / 200 in 1538ms (compile: 940ms, render: 598ms)
+ HEAD / 200 in 103ms (compile: 81ms, render: 22ms)
+✓ Compiled in 568ms
+ GET / 200 in 200ms (compile: 172ms, render: 28ms)
+ GET / 200 in 159ms (compile: 63ms, render: 96ms)
+ GET / 200 in 93ms (compile: 80ms, render: 13ms)
+ GET / 200 in 211ms (compile: 119ms, render: 92ms)
+ GET / 200 in 167ms (compile: 78ms, render: 89ms)
+ GET / 200 in 262ms (compile: 76ms, render: 186ms)
+ GET / 200 in 182ms (compile: 75ms, render: 107ms)
+ GET / 200 in 256ms (compile: 91ms, render: 164ms)
+ GET / 200 in 158ms (compile: 72ms, render: 86ms)
+ GET / 200 in 79ms (compile: 73ms, render: 6ms)
+ GET / 200 in 540ms (compile: 362ms, render: 178ms)
+ GET / 200 in 193ms (compile: 110ms, render: 83ms)
+ GET / 200 in 152ms (compile: 70ms, render: 82ms)
+ GET / 200 in 406ms (compile: 71ms, render: 336ms)
+ GET / 200 in 341ms (compile: 191ms, render: 150ms)
+ GET / 200 in 266ms (compile: 116ms, render: 151ms)
+ GET / 200 in 287ms (compile: 128ms, render: 159ms)
+ GET / 200 in 147ms (compile: 139ms, render: 8ms)
+✓ Compiled in 130ms
+ GET / 200 in 217ms (compile: 131ms, render: 86ms)
+ GET / 200 in 80ms (compile: 74ms, render: 6ms)
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 2 times.
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 2 times.
+ GET / 200 in 303ms (compile: 90ms, render: 213ms)
+ HEAD / 200 in 102ms (compile: 74ms, render: 28ms)
+ GET /dashboard 200 in 2.2s (compile: 2.1s, render: 87ms)
+ HEAD /dashboard 200 in 96ms (compile: 81ms, render: 15ms)
+⨯ ./dashboard/app/dashboard/grant/page.tsx:7:1
+Export treasuryAbi doesn't exist in target module
+[0m [90m  5 |[39m [36mimport[39m { parseEther } [36mfrom[39m [32m"viem"[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m { getContracts[33m,[39m isDeployed } [36mfrom[39m [32m"@/lib/contracts"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { agentRegistryAbi[33m,[39m treasuryAbi } [36mfrom[39m [32m"@/lib/abis"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  8 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/Button"[39m[33m;[39m
+ [90m  9 |[39m [36mimport[39m { [33mShieldCheck[39m[33m,[39m [33mShieldAlert[39m[33m,[39m [33mCpu[39m[33m,[39m [33mDatabase[39m[33m,[39m [33mWallet[39m } [36mfrom[39m [32m"lucide-react"[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m"next/link"[39m[33m;[39m[0m
+
+The export treasuryAbi was not found in module [project]/dashboard/lib/abis.ts [app-client] (ecmascript).
+Did you mean to import spendTrackerAbi?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component Browser]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component SSR]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+
+
+./dashboard/app/dashboard/grant/page.tsx:7:1
+Export treasuryAbi doesn't exist in target module
+[0m [90m  5 |[39m [36mimport[39m { parseEther } [36mfrom[39m [32m"viem"[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m { getContracts[33m,[39m isDeployed } [36mfrom[39m [32m"@/lib/contracts"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { agentRegistryAbi[33m,[39m treasuryAbi } [36mfrom[39m [32m"@/lib/abis"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  8 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/Button"[39m[33m;[39m
+ [90m  9 |[39m [36mimport[39m { [33mShieldCheck[39m[33m,[39m [33mShieldAlert[39m[33m,[39m [33mCpu[39m[33m,[39m [33mDatabase[39m[33m,[39m [33mWallet[39m } [36mfrom[39m [32m"lucide-react"[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m"next/link"[39m[33m;[39m[0m
+
+The export treasuryAbi was not found in module [project]/dashboard/lib/abis.ts [app-ssr] (ecmascript).
+Did you mean to import spendTrackerAbi?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component Browser]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component SSR]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+
+ GET /dashboard/grant 500 in 1814ms (compile: 1757ms, render: 57ms)
+⨯ ./dashboard/app/dashboard/grant/page.tsx:7:1
+Export treasuryAbi doesn't exist in target module
+[0m [90m  5 |[39m [36mimport[39m { parseEther } [36mfrom[39m [32m"viem"[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m { getContracts[33m,[39m isDeployed } [36mfrom[39m [32m"@/lib/contracts"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { agentRegistryAbi[33m,[39m treasuryAbi } [36mfrom[39m [32m"@/lib/abis"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  8 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/Button"[39m[33m;[39m
+ [90m  9 |[39m [36mimport[39m { [33mShieldCheck[39m[33m,[39m [33mShieldAlert[39m[33m,[39m [33mCpu[39m[33m,[39m [33mDatabase[39m[33m,[39m [33mWallet[39m } [36mfrom[39m [32m"lucide-react"[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m"next/link"[39m[33m;[39m[0m
+
+The export treasuryAbi was not found in module [project]/dashboard/lib/abis.ts [app-client] (ecmascript).
+Did you mean to import spendTrackerAbi?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component Browser]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component SSR]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+
+
+./dashboard/app/dashboard/grant/page.tsx:7:1
+Export treasuryAbi doesn't exist in target module
+[0m [90m  5 |[39m [36mimport[39m { parseEther } [36mfrom[39m [32m"viem"[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m { getContracts[33m,[39m isDeployed } [36mfrom[39m [32m"@/lib/contracts"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { agentRegistryAbi[33m,[39m treasuryAbi } [36mfrom[39m [32m"@/lib/abis"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  8 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/Button"[39m[33m;[39m
+ [90m  9 |[39m [36mimport[39m { [33mShieldCheck[39m[33m,[39m [33mShieldAlert[39m[33m,[39m [33mCpu[39m[33m,[39m [33mDatabase[39m[33m,[39m [33mWallet[39m } [36mfrom[39m [32m"lucide-react"[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m"next/link"[39m[33m;[39m[0m
+
+The export treasuryAbi was not found in module [project]/dashboard/lib/abis.ts [app-ssr] (ecmascript).
+Did you mean to import spendTrackerAbi?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component Browser]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component SSR]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+
+ GET /dashboard/grant 500 in 11ms (compile: 7ms, render: 5ms)
+⨯ ./dashboard/app/dashboard/grant/page.tsx:7:1
+Export treasuryAbi doesn't exist in target module
+[0m [90m  5 |[39m [36mimport[39m { parseEther } [36mfrom[39m [32m"viem"[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m { getContracts[33m,[39m isDeployed } [36mfrom[39m [32m"@/lib/contracts"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { agentRegistryAbi[33m,[39m treasuryAbi } [36mfrom[39m [32m"@/lib/abis"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  8 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/Button"[39m[33m;[39m
+ [90m  9 |[39m [36mimport[39m { [33mShieldCheck[39m[33m,[39m [33mShieldAlert[39m[33m,[39m [33mCpu[39m[33m,[39m [33mDatabase[39m[33m,[39m [33mWallet[39m } [36mfrom[39m [32m"lucide-react"[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m"next/link"[39m[33m;[39m[0m
+
+The export treasuryAbi was not found in module [project]/dashboard/lib/abis.ts [app-client] (ecmascript).
+Did you mean to import spendTrackerAbi?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component Browser]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component SSR]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+
+
+./dashboard/app/dashboard/grant/page.tsx:7:1
+Export treasuryAbi doesn't exist in target module
+[0m [90m  5 |[39m [36mimport[39m { parseEther } [36mfrom[39m [32m"viem"[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m { getContracts[33m,[39m isDeployed } [36mfrom[39m [32m"@/lib/contracts"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { agentRegistryAbi[33m,[39m treasuryAbi } [36mfrom[39m [32m"@/lib/abis"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  8 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/Button"[39m[33m;[39m
+ [90m  9 |[39m [36mimport[39m { [33mShieldCheck[39m[33m,[39m [33mShieldAlert[39m[33m,[39m [33mCpu[39m[33m,[39m [33mDatabase[39m[33m,[39m [33mWallet[39m } [36mfrom[39m [32m"lucide-react"[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m"next/link"[39m[33m;[39m[0m
+
+The export treasuryAbi was not found in module [project]/dashboard/lib/abis.ts [app-ssr] (ecmascript).
+Did you mean to import spendTrackerAbi?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component Browser]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./dashboard/app/dashboard/grant/page.tsx [Client Component SSR]
+    ./dashboard/app/dashboard/grant/page.tsx [Server Component]
+
+
+ GET /dashboard/grant 500 in 51ms (compile: 43ms, render: 8ms)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload when ./dashboard/node_modules/next/dist/shared/lib/router/router.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 299ms
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 3 times.
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 3 times.
+ GET /dashboard/grant 200 in 2.2s (compile: 1960ms, render: 222ms)
+ HEAD /dashboard/grant 200 in 100ms (compile: 82ms, render: 18ms)
+ GET /dashboard/audit 200 in 121ms (compile: 108ms, render: 14ms)
+ GET /dashboard 200 in 114ms (compile: 106ms, render: 7ms)
+ GET /dashboard 200 in 195ms (compile: 174ms, render: 21ms)
+ GET /dashboard 200 in 195ms (compile: 80ms, render: 115ms)
+ GET /dashboard 200 in 277ms (compile: 101ms, render: 176ms)
+ GET /dashboard 200 in 274ms (compile: 155ms, render: 119ms)
+ GET /dashboard 200 in 346ms (compile: 98ms, render: 247ms)
+ GET /dashboard 200 in 241ms (compile: 91ms, render: 151ms)
+ GET /dashboard 200 in 233ms (compile: 136ms, render: 97ms)
+ GET /dashboard 200 in 214ms (compile: 84ms, render: 130ms)
+ GET /dashboard 200 in 367ms (compile: 105ms, render: 262ms)
+ GET /dashboard 200 in 253ms (compile: 182ms, render: 71ms)
+✓ Compiled in 911ms
+ GET /dashboard/grant 200 in 1038ms (compile: 1019ms, render: 19ms)
+ GET /dashboard 200 in 143ms (compile: 132ms, render: 11ms)
+ GET / 200 in 90ms (compile: 83ms, render: 7ms)
+✓ Compiled in 109ms
+✓ Compiled in 431ms
+✓ Compiled in 94ms
+✓ Compiled in 222ms
+✓ Compiled in 123ms
+✓ Compiled in 209ms
+ GET / 404 in 2.0s (compile: 1906ms, render: 107ms)
+ GET / 404 in 216ms (compile: 198ms, render: 18ms)
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 4 times.
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 4 times.
+ GET / 404 in 496ms (compile: 483ms, render: 12ms)
+ GET / 404 in 497ms (compile: 197ms, render: 300ms)
+ GET / 404 in 350ms (compile: 327ms, render: 23ms)
+ GET / 200 in 4.6min (compile: 17.4s, render: 4.3min)
+ GET / 200 in 4.6min (compile: 16.7s, render: 4.3min)
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 5 times.
+WalletConnect Core is already initialized. This is probably a mistake and can lead to unexpected behavior. Init() was called 5 times.
+ GET / 200 in 4.8min (compile: 18.1s, render: 4.5min)
+ GET / 200 in 4.9min (compile: 17.1s, render: 4.7min)
+ GET / 200 in 5.2min (compile: 18.9s, render: 4.9min)
+ GET / 200 in 40s (compile: 20.0s, render: 20.0s)
+ GET / 200 in 4.6min (compile: 18.5s, render: 4.3min)
+ GET / 200 in 82s (compile: 21.3s, render: 61s)
+
+<--- Last few GCs --->
+
+[29486:0x95c800000]  1412103 ms: Mark-Compact 8058.1 (8239.1) -> 8058.0 (8239.4) MB, pooled: 2 MB, 197.17 / 0.00 ms  (average mu = 0.363, current mu = 0.010) allocation failure; scavenge might not succeed
+[29486:0x95c800000]  1412472 ms: Mark-Compact 8058.9 (8240.3) -> 8058.9 (8240.0) MB, pooled: 2 MB, 369.21 / 0.00 ms  (average mu = 0.155, current mu = 0.002) allocation failure; scavenge might not succeed
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x1027b225c node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+ 2: 0x1029884fc v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+ 3: 0x102b97c24 v8::internal::Heap::stack() [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+ 4: 0x102b95fc4 v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+ 5: 0x102b8a5ac v8::internal::HeapAllocator::AllocateRawWithLightRetrySlowPath(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+ 6: 0x102b8ade4 v8::internal::HeapAllocator::AllocateRawWithRetryOrFailSlowPath(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+ 7: 0x102b5f0e8 v8::internal::FactoryBase<v8::internal::Factory>::NewRawTwoByteString(int, v8::internal::AllocationType) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+ 8: 0x102b6f99c v8::internal::Factory::NewStringFromUtf8(v8::base::Vector<unsigned char const>, unibrow::Utf8Variant, v8::internal::AllocationType) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+ 9: 0x1029a4fa4 v8::String::NewFromUtf8(v8::Isolate*, char const*, v8::NewStringType, int) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+10: 0x102756d48 napi_create_string_utf8 [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+11: 0x12f55c41c blake3_compress_in_place_portable [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+12: 0x12b5c0af4  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+13: 0x12b7505a0  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+14: 0x12b750210  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+15: 0x12b5c0c30  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+16: 0x12b7fb1ec  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+17: 0x12b74fa9c  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+18: 0x12b7faa04  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+19: 0x12b7776e4  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+20: 0x12b7fb874  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+21: 0x12b74ecb4  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+22: 0x12b794ef4  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+23: 0x12b7c4ad4  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+24: 0x12b774670  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+25: 0x12b78f5ac  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+26: 0x12b6bbe74  [/Users/yashrajpardeshi/Projects/Bouclier/dashboard/node_modules/@next/swc-darwin-arm64/next-swc.darwin-arm64.node]
+27: 0x1027750c0 v8impl::(anonymous namespace)::ThreadSafeFunction::AsyncCb(uv_async_s*) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+28: 0x1033934f0 uv__async_io [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+29: 0x1033a7888 uv__io_poll [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+30: 0x103393a58 uv_run [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+31: 0x1026b24f4 node::SpinEventLoopInternal(node::Environment*) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+32: 0x1027fd0b0 node::NodeMainInstance::Run() [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+33: 0x10276d920 node::Start(int, char**) [/Users/yashrajpardeshi/.nvm/versions/node/v22.18.0/bin/node]
+34: 0x1949e5d54 start [/usr/lib/dyld]

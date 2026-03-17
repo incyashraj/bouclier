@@ -1,0 +1,8 @@
+{
+    "importFilesToOrigRelpaths": {},
+    "primary_contract": "SpendTracker",
+    "specfile": "specs/SpendTracker.spec",
+    "specfileOrigRelpath": "specs/SpendTracker.spec",
+    "specfilesToImportDecls": {},
+    "type": "spec"
+}

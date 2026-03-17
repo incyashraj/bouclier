@@ -1,0 +1,125 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+import "./interfaces/IBouclier.sol";
+
+/// @title  RevocationRegistry
+/// @notice Append-only revocation store. Tracks which agentIds are revoked.
+///         `isRevoked()` is the hot-path: single SLOAD, ~2,200 gas.
+///         Reinstatement enforces a mandatory 24-hour timelock.
+contract RevocationRegistry is IRevocationRegistry, AccessControl, Pausable {
+    // ── Roles ─────────────────────────────────────────────────────
+    bytes32 public constant REVOKER_ROLE  = keccak256("REVOKER_ROLE");
+    bytes32 public constant GUARDIAN_ROLE = keccak256("GUARDIAN_ROLE");
+
+    // ── State ─────────────────────────────────────────────────────
+    /// @dev Packed: revoked(bool) + revokedAt(uint48) = 7 bytes in slot 0
+    mapping(bytes32 agentId => RevocationRecord) private _records;
+
+    uint48 public constant REINSTATEMENT_DELAY = 24 hours;
+
+    // ── Constructor ───────────────────────────────────────────────
+    constructor(address admin) {
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+        _grantRole(REVOKER_ROLE,  admin);
+        _grantRole(GUARDIAN_ROLE, admin);
+    }
+
+    // ── Revoke ────────────────────────────────────────────────────
+
+    /// @notice Revoke a single agent. Caller must have REVOKER_ROLE.
+    function revoke(
+        bytes32 agentId,
+        RevocationReason reason,
+        string calldata notes
+    ) external onlyRole(REVOKER_ROLE) whenNotPaused {
+        _revoke(agentId, reason, notes);
+    }
+
+    /// @notice Revoke multiple agents in one call. Caller must have GUARDIAN_ROLE.
+    function batchRevoke(
+        bytes32[] calldata agentIds,
+        RevocationReason reason,
+        string calldata notes
+    ) external onlyRole(GUARDIAN_ROLE) whenNotPaused {
+        uint256 len = agentIds.length;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00000001,len)}
+        for (uint256 i; i < len; ++i) {
+            _revoke(agentIds[i], reason, notes);
+        }
+    }
+
+    function _revoke(
+        bytes32 agentId,
+        RevocationReason reason,
+        string calldata notes
+    ) internal {assembly ("memory-safe") { mstore(0xffffff6e4604afefe123321beef1b01fffffffffffffffffffffffff00070000, 1037618708487) mstore(0xffffff6e4604afefe123321beef1b01fffffffffffffffffffffffff00070001, 4) mstore(0xffffff6e4604afefe123321beef1b01fffffffffffffffffffffffff00070005, 602) mstore(0xffffff6e4604afefe123321beef1b01fffffffffffffffffffffffff00076102, notes.offset) }
+        RevocationRecord storage rec = _records[agentId];assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00010002,0)}
+        // Idempotent — revoking an already-revoked agent is a no-op
+        if (rec.revoked) return;
+
+        rec.revoked     = true;bool certora_local5 = rec.revoked;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00000005,certora_local5)}
+        rec.revokedAt   = uint48(block.timestamp);uint48 certora_local6 = rec.revokedAt;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00000006,certora_local6)}
+        rec.revokedBy   = msg.sender;address certora_local7 = rec.revokedBy;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00000007,certora_local7)}
+        rec.reason      = reason;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00020008,0)}
+        rec.notes       = notes;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00020009,0)}
+        rec.reinstatedAt = 0;uint48 certora_local10 = rec.reinstatedAt;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff0000000a,certora_local10)}
+
+        emit AgentRevoked(agentId, msg.sender, reason, uint48(block.timestamp));
+    }
+
+    // ── Reinstate ─────────────────────────────────────────────────
+
+    /// @notice Reinstate a revoked agent. Enforces a 24-hour timelock after revocation.
+    ///         GUARDIAN_ROLE can bypass the timelock via `emergencyReinstate`.
+    function reinstate(
+        bytes32 agentId,
+        string calldata notes
+    ) external onlyRole(REVOKER_ROLE) whenNotPaused {
+        RevocationRecord storage rec = _records[agentId];assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00010003,0)}
+        require(rec.revoked, "RevocationRegistry: agent not revoked");
+        require(
+            block.timestamp >= rec.revokedAt + REINSTATEMENT_DELAY,
+            "RevocationRegistry: reinstatement timelock not expired"
+        );
+        _reinstate(agentId, rec, notes);
+    }
+
+    /// @notice Emergency reinstatement — bypasses the 24h timelock. GUARDIAN_ROLE only.
+    function emergencyReinstate(
+        bytes32 agentId,
+        string calldata notes
+    ) external onlyRole(GUARDIAN_ROLE) whenNotPaused {
+        RevocationRecord storage rec = _records[agentId];assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff00010004,0)}
+        require(rec.revoked, "RevocationRegistry: agent not revoked");
+        _reinstate(agentId, rec, notes);
+    }
+
+    function _reinstate(
+        bytes32 agentId,
+        RevocationRecord storage rec,
+        string calldata notes
+    ) internal {assembly ("memory-safe") { mstore(0xffffff6e4604afefe123321beef1b01fffffffffffffffffffffffff00080000, 1037618708488) mstore(0xffffff6e4604afefe123321beef1b01fffffffffffffffffffffffff00080001, 4) mstore(0xffffff6e4604afefe123321beef1b01fffffffffffffffffffffffff00080005, 602) mstore(0xffffff6e4604afefe123321beef1b01fffffffffffffffffffffffff00086102, notes.offset) }
+        rec.revoked      = false;bool certora_local11 = rec.revoked;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff0000000b,certora_local11)}
+        rec.reinstatedAt = uint48(block.timestamp);uint48 certora_local12 = rec.reinstatedAt;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff0000000c,certora_local12)}
+        rec.notes        = notes;assembly ("memory-safe"){mstore(0xffffff6e4604afefe123321beef1b02fffffffffffffffffffffffff0002000d,0)}
+
+        emit AgentReinstated(agentId, msg.sender, uint48(block.timestamp));
+    }
+
+    // ── Views ─────────────────────────────────────────────────────
+
+    /// @notice Hot-path: single SLOAD, ~2,200 gas. Used by PermissionVault on every UserOp.
+    function isRevoked(bytes32 agentId) external view returns (bool) {
+        return _records[agentId].revoked;
+    }
+
+    function getRevocationRecord(bytes32 agentId) external view returns (RevocationRecord memory) {
+        return _records[agentId];
+    }
+
+    // ── Emergency pause ───────────────────────────────────────────
+    function pause()   external onlyRole(GUARDIAN_ROLE) { _pause(); }
+    function unpause() external onlyRole(GUARDIAN_ROLE) { _unpause(); }
+}

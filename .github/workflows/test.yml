@@ -1,0 +1,126 @@
+name: Bouclier CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  # ── Solidity: Build + Unit Tests ──────────────────────────────────
+  contracts:
+    name: Contracts (Foundry)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Install dependencies
+        run: forge install
+
+      - name: Build
+        run: forge build --sizes
+        env:
+          FOUNDRY_PROFILE: default
+
+      - name: Run unit tests
+        run: forge test --match-path "test/unit/*" -vv
+        env:
+          FOUNDRY_PROFILE: ci   # uses fuzz.runs = 1000
+
+      - name: Check coverage (≥85%)
+        run: |
+          forge coverage --report summary 2>&1 | tee coverage.txt
+          # Extract overall line coverage and assert >= 85
+          COVERAGE=$(grep -E "^Total" coverage.txt | awk '{print $NF}' | tr -d '%')
+          echo "Line coverage: ${COVERAGE}%"
+          if [ -z "$COVERAGE" ]; then
+            echo "WARNING: Could not parse coverage percentage, skipping check"
+          elif (( $(echo "$COVERAGE < 85" | bc -l) )); then
+            echo "FAIL: Coverage ${COVERAGE}% is below 85% threshold"
+            exit 1
+          fi
+
+  # ── Static Analysis: Slither ──────────────────────────────────────
+  slither:
+    name: Slither Static Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.4.0
+        with:
+          target: contracts/
+          slither-args: >-
+            --filter-paths "lib/"
+            --exclude-dependencies
+          fail-on: high
+          sarif: results.sarif
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: results.sarif
+
+  # ── Lint: Solidity style ──────────────────────────────────────────
+  lint:
+    name: Solidity Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: forge fmt check
+        run: forge fmt --check
+
+  # ── Python: FastAPI Backend Tests ─────────────────────────────────
+  api:
+    name: API Tests (FastAPI)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]" aiosqlite
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short

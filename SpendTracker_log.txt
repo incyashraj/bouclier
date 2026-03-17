@@ -1,0 +1,179 @@
+Start Tue Mar 17 04:19:23 GMT 2026
+Start Tue Mar 17 04:19:23 GMT 2026
+[ForkJoinPool-1-worker-1] WARN ALWAYS - The type `AccessControl.RoleData` will not be accessible in CVL code
+Reason(s):
+	struct field `hasRole` cannot be expressed in CVL: [mapping types are not supported]
+[ForkJoinPool-1-worker-1] WARN ALWAYS - Syntax warning in spec file SpendTracker.spec:7:5: Method declaration for SpendTracker.recordSpend(bytes32, uint256, uint48) is neither `envfree`, `optional`, nor summarized, so it has no effect.
+[ForkJoinPool-1-worker-1] WARN ALWAYS - Syntax warning in spec file SpendTracker.spec:10:5: Method declaration for SpendTracker.checkSpendCap(bytes32, uint256, uint256) returns (bool) is neither `envfree`, `optional`, nor summarized, so it has no effect.
+[ForkJoinPool-1-worker-1] WARN ALWAYS - Syntax warning in spec file SpendTracker.spec:11:5: Method declaration for SpendTracker.getRollingSpend(bytes32, uint256) returns (uint256) is neither `envfree`, `optional`, nor summarized, so it has no effect.
+The scene contains 20 contracts:
+SpendTracker : 0xce4604a000000000000000000000000e,
+ecrecover : 0x1,
+sha256 : 0x2,
+ripemd160 : 0x3,
+identity : 0x4,
+bigmod : 0x5,
+bn256Add : 0x6,
+bn256ScalarMul : 0x7,
+bn256Pairing : 0x8,
+Precompiled244 : 0xf4,
+Precompiled245 : 0xf5,
+Precompiled246 : 0xf6,
+Precompiled247 : 0xf7,
+Precompiled248 : 0xf8,
+Precompiled249 : 0xf9,
+Precompiled250 : 0xfa,
+Precompiled251 : 0xfb,
+Precompiled252 : 0xfc,
+Precompiled253 : 0xfd,
+Precompiled254 : 0xfe
+Running initial transformations
+[ForkJoinPool-1-worker-16] WARN ALLOC - In identity: Found multiple (or zero) initial writes: []
+[ForkJoinPool-1-worker-14] WARN ALLOC - In ecrecover: Found multiple (or zero) initial writes: []
+[ForkJoinPool-1-worker-19] WARN ALLOC - In sha256: Found multiple (or zero) initial writes: []
+Has CVL checks.
+Checking CVL specs/SpendTracker.spec for contract SpendTracker
+Unrolling loops 1 time, unwinding condition is assumed
+Checking rule zeroCapMeansNoLimit (2 out of 4)...
+Checking rule spendCapEnforced (1 out of 4)...
+Checking rule rollingSpendMonotonicity (3 out of 4)...
+Checking rule recordSpendIncreasesRolling (4 out of 4)...
+Starting to run on rule zeroCapMeansNoLimit
+Starting to run on rule rollingSpendMonotonicity
+Starting to run on rule spendCapEnforced
+Starting to run on rule recordSpendIncreasesRolling
+Verified: zeroCapMeansNoLimit
+zeroCapMeansNoLimit: Properties successfully verified on all inputs
+Starting to run on rule zeroCapMeansNoLimit-rule_not_vacuous
+Total time for spendCapEnforced: 0 seconds ; Split time: 0 seconds ; Number of problems: 1 ; Solver time : 0 seconds
+Total time for rollingSpendMonotonicity: 0 seconds ; Split time: 0 seconds ; Number of problems: 1 ; Solver time : 0 seconds
+Verified: spendCapEnforced
+spendCapEnforced: Properties successfully verified on all inputs
+Verified: rollingSpendMonotonicity
+rollingSpendMonotonicity: Properties successfully verified on all inputs
+Total time for zeroCapMeansNoLimit-rule_not_vacuous: 0 seconds ; Split time: 0 seconds ; Number of problems: 1 ; Solver time : 0 seconds
+Violated: zeroCapMeansNoLimit-rule_not_vacuous
+zeroCapMeansNoLimit-rule_not_vacuous: A property is violated
+[ForkJoinPool-1-worker-20] WARN REPORT_UTILS - No value found for symbol CANON19!!16:bool
+Starting to run on rule rollingSpendMonotonicity-rule_not_vacuous
+Result for zeroCapMeansNoLimit: zeroCapMeansNoLimit: SUCCESS
+Starting to run on rule spendCapEnforced-rule_not_vacuous
+Total time for recordSpendIncreasesRolling: 1 seconds ; Split time: 0 seconds ; Number of problems: 1 ; Solver time : 0 seconds
+Violated: recordSpendIncreasesRolling
+recordSpendIncreasesRolling: A property is violated
+received `signalSkip` for rule recordSpendIncreasesRolling-rule_not_vacuous
+Result for recordSpendIncreasesRolling: recordSpendIncreasesRolling: FAIL: Cast safety of e.block.timestamp (uint25...
+Total time for rollingSpendMonotonicity-rule_not_vacuous: 0 seconds ; Split time: 0 seconds ; Number of problems: 1 ; Solver time : 0 seconds
+Violated: rollingSpendMonotonicity-rule_not_vacuous
+rollingSpendMonotonicity-rule_not_vacuous: A property is violated
+[ForkJoinPool-1-worker-5] WARN COMMON - Got a non-constant, non-variable operand (Operand(out=CANON13:int, exp=e.block.timestamp)) that is not in the builderState. Failed to construct its complete syntax-tree
+[ForkJoinPool-1-worker-5] WARN REPORT_UTILS - No value found for symbol CANON29!!29:int
+[ForkJoinPool-1-worker-5] WARN REPORT_UTILS - No value found for symbol 0x0
+[ForkJoinPool-1-worker-5] WARN REPORT_UTILS - No value found for symbol CANON49!!59:int
+[ForkJoinPool-1-worker-5] WARN REPORT_UTILS - No value found for symbol 0x0
+Result for rollingSpendMonotonicity: rollingSpendMonotonicity: SUCCESS
+Total time for spendCapEnforced-rule_not_vacuous: 0 seconds ; Split time: 0 seconds ; Number of problems: 1 ; Solver time : 0 seconds
+Violated: spendCapEnforced-rule_not_vacuous
+spendCapEnforced-rule_not_vacuous: A property is violated
+[ForkJoinPool-1-worker-19] WARN REPORT_UTILS - No value found for symbol CANON23!!23:int
+[ForkJoinPool-1-worker-19] WARN REPORT_UTILS - No value found for symbol CANON45!!55:bool
+[ForkJoinPool-1-worker-19] WARN COMMON - Got a non-constant, non-variable operand (Operand(out=CANON70!!91:bool, exp=!(result))) that is not in the builderState. Failed to construct its complete syntax-tree
+Result for spendCapEnforced: spendCapEnforced: SUCCESS
+Results for all:
+*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
+|Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
+|----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
+|zeroCapMeansNoLimit                     |Not violated |0         |                                                            |no local variables                                |
+|                                        |(unsat)      |          |                                                            |                                                  |
+|spendCapEnforced                        |Not violated |1         |                                                            |no local variables                                |
+|                                        |(unsat)      |          |                                                            |                                                  |
+|rollingSpendMonotonicity                |Not violated |1         |                                                            |no local variables                                |
+|                                        |(unsat)      |          |                                                            |                                                  |
+|rule_not_vacuous                        |Not violated |0         |Assert message: sanity check for rule zeroCapMeansNoLimi... |SpendTracker=1                                    |
+|                                        |(sat)        |          |                                                            |agentId=0x0                                       |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.blobbasefee=0                             |
+|                                        |             |          |                                                            |e.block.coinbase=0x0                              |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=SpendTracker                         |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0x0                                   |
+|                                        |             |          |                                                            |proposed=0                                        |
+|                                        |             |          |                                                            |result=true                                       |
+|recordSpendIncreasesRolling             |Violated     |2         |Assert message: Cast safety of e.block.timestamp (uint25... |SpendTracker=14                                   |
+|                                        |(sat)        |          |                                                            |after=*                                           |
+|                                        |             |          |                                                            |agentId=0xf                                       |
+|                                        |             |          |                                                            |amount=2                                          |
+|                                        |             |          |                                                            |before=*                                          |
+|                                        |             |          |                                                            |e.block.basefee=12                                |
+|                                        |             |          |                                                            |e.block.blobbasefee=11                            |
+|                                        |             |          |                                                            |e.block.coinbase=0x403                            |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=13                                 |
+|                                        |             |          |                                                            |e.block.timestamp=2^48 + 1                        |
+|                                        |             |          |                                                            |e.msg.sender=0x401                                |
+|                                        |             |          |                                                            |e.msg.value=7                                     |
+|                                        |             |          |                                                            |e.tx.origin=0x402                                 |
+|                                        |             |          |                                                            |ts=10                                             |
+|rule_not_vacuous                        |Not violated |0         |Assert message: sanity check for rule rollingSpendMonoto... |SpendTracker=2^159 - 1                            |
+|                                        |(sat)        |          |                                                            |agentId=0x8000000000000000000000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000                          |
+|                                        |             |          |                                                            |e.block.basefee=2^255 - 1                         |
+|                                        |             |          |                                                            |e.block.blobbasefee=2^255 - 1                     |
+|                                        |             |          |                                                            |e.block.coinbase=SpendTracker                     |
+|                                        |             |          |                                                            |e.block.difficulty=2^255 - 1                      |
+|                                        |             |          |                                                            |e.block.gaslimit=2^255 - 1                        |
+|                                        |             |          |                                                            |e.block.number=2^255 - 1                          |
+|                                        |             |          |                                                            |e.block.timestamp=0xbfffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
+|                                        |             |          |                                                            |e.msg.sender=SpendTracker                         |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=SpendTracker                          |
+|                                        |             |          |                                                            |largeSpend=0                                      |
+|                                        |             |          |                                                            |largeWindow=2^255                                 |
+|                                        |             |          |                                                            |smallSpend=0                                      |
+|                                        |             |          |                                                            |smallWindow=2^254                                 |
+|rule_not_vacuous                        |Not violated |0         |Assert message: sanity check for rule spendCapEnforced s... |SpendTracker=2                                    |
+|                                        |(sat)        |          |                                                            |agentId=0x94d5                                    |
+|                                        |             |          |                                                            |cap=MAX_UINT256                                   |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.blobbasefee=0                             |
+|                                        |             |          |                                                            |e.block.coinbase=0x0                              |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=87542                           |
+|                                        |             |          |                                                            |e.msg.sender=0x1                                  |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0x0                                   |
+|                                        |             |          |                                                            |proposed=0                                        |
+|                                        |             |          |                                                            |result=true                                       |
+|                                        |             |          |                                                            |rolling=0                                         |
+*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
+
+Failures summary:
+Failed on rule_not_vacuous:
+Assert message: sanity check for rule zeroCapMeansNoLimi...
+
+sanity check (vacuity of rule) for rule zeroCapMeansNoLimit
+Failed on recordSpendIncreasesRolling:
+Assert message: Cast safety of e.block.timestamp (uint25...
+
+
+Failed on rule_not_vacuous:
+Assert message: sanity check for rule rollingSpendMonoto...
+
+sanity check (vacuity of rule) for rule rollingSpendMonotonicity
+Failed on rule_not_vacuous:
+Assert message: sanity check for rule spendCapEnforced s...
+
+sanity check (vacuity of rule) for rule spendCapEnforced
+
+Duration 23427, RuleCheckResultsStats: numTotal = 4; numVerified = 3; numViolated = 1; numTimeout = 0; numError = 0
+Done 0m
+Done 0m
+Event reporter: all events were sent without errors

@@ -1,0 +1,16 @@
+{
+  "name": "bouclier-subgraph",
+  "version": "0.1.0",
+  "description": "The Graph subgraph for Bouclier AI Agent Trust Layer",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy:sepolia": "graph deploy --studio bouclier-base-sepolia",
+    "deploy:hosted": "graph deploy --product hosted-service <github>/bouclier-base-sepolia"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.81.0",
+    "@graphprotocol/graph-ts": "^0.35.1"
+  }
+}

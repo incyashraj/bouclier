@@ -1,0 +1,13 @@
+Saving last configuration file to .certora_internal/26_03_17_11_07_31_659/run.conf
+Couldn't find the installed Java version.
+You are using certora-cli version 8.3.1; however, version 8.8.1 is available. It is recommended to upgrade by running: pip install certora-cli --upgrade
+or
+pip3 install certora-cli --upgrade
+There is no TAC file. Going to script CertoraProver/certoraBuild.py to main_with_args()
+main build cache key computed based on {'files': ['src/SpendTracker.sol'], 'package_version_for_build_cache': 'certora-cli 8.3.1', 'packages': ['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts'], 'packages_path': 'node_modules', 'solc': 'solc', 'solc_allow_path': '.', 'test_condition': 'True'}
+Creating dir /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_07_31_659/.certora_config
+In /Users/yashrajpardeshi/Projects/Bouclier/contracts/specs/SpendTracker.spec, found the imports: []
+copying spec file /Users/yashrajpardeshi/Projects/Bouclier/contracts/specs/SpendTracker.spec to /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_07_31_659/.certora_sources/.0_SpendTracker.spec.spec
+writing /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_07_31_659/.certora_verify.json
+`java` is not installed. Installing Java version 19 or later will enable faster CVL specification syntax checking before uploading to the cloud.
+build failed

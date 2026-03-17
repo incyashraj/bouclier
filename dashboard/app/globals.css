@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: theme('colors.background.DEFAULT');
+    color: theme('colors.text.DEFAULT');
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .crosshair {
+    @apply absolute w-4 h-4 flex items-center justify-center text-[#A1A1AA] text-sm pointer-events-none;
+    transform: translate(-50%, -50%);
+  }
+
+  .editor-lines {
+    background-image: repeating-linear-gradient(transparent, transparent 23px, #E5E5E5 23px, #E5E5E5 24px);
+  }
+
+  .text-dotted {
+    background: radial-gradient(circle, #FF451A 2px, transparent 2px);
+    background-size: 8px 8px;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 900;
+  }
+  
+  .dark-text-dotted {
+    background: radial-gradient(circle, #333333 2px, transparent 2px);
+    background-size: 8px 8px;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 900;
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "importFilesToOrigRelpaths": {},
+    "primary_contract": "SpendTracker",
+    "specfile": "/Users/yashrajpardeshi/Projects/Bouclier/contracts/specs/SpendTracker.spec",
+    "specfileOrigRelpath": "specs/SpendTracker.spec",
+    "specfilesToImportDecls": {},
+    "type": "spec"
+}

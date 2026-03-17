@@ -1,0 +1,254 @@
+Saving last configuration file to .certora_internal/26_03_17_11_08_02_417/run.conf
+Couldn't find the installed Java version.
+You are using certora-cli version 8.3.1; however, version 8.8.1 is available. It is recommended to upgrade by running: pip install certora-cli --upgrade
+or
+pip3 install certora-cli --upgrade
+There is no TAC file. Going to script CertoraProver/certoraBuild.py to main_with_args()
+main build cache key computed based on {'files': ['src/AgentRegistry.sol', 'src/AuditLogger.sol', 'src/PermissionVault.sol', 'src/RevocationRegistry.sol', 'src/SpendTracker.sol'], 'package_version_for_build_cache': 'certora-cli 8.3.1', 'packages': ['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts'], 'packages_path': 'node_modules', 'solc': 'solc', 'solc_allow_path': '.', 'test_condition': 'True'}
+Creating dir /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_config
+In /Users/yashrajpardeshi/Projects/Bouclier/contracts/specs/PermissionVault.spec, found the imports: []
+copying spec file /Users/yashrajpardeshi/Projects/Bouclier/contracts/specs/PermissionVault.spec to /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/.0_PermissionVault.spec.spec
+writing /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_verify.json
+Local checks of CVL specification files disabled. It is recommended to enable the checks.
+`java` is not installed. Installing Java version 19 or later will enable faster CVL specification syntax checking before uploading to the cloud.
+
+building file src/AgentRegistry.sol
+Running cmd solc --version
+stdout, stderr = .certora_internal/26_03_17_11_08_02_417/.certora_config/version_check_solc.stdout, .certora_internal/26_03_17_11_08_02_417/.certora_config/version_check_solc.stderr
+Exitcode 0
+Solc run solc --version time: 0.156
+Running cmd solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0/" --overwrite --allow-paths ".",.,"lib/openzeppelin-contracts/contracts" --standard-json
+stdout, stderr = .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stdout.json, .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stderr.json
+Exitcode 0
+Solc run solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0/" --overwrite --allow-paths ".",.,"lib/openzeppelin-contracts/contracts" --standard-json time: 0.1965
+reading standard json data from .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stdout.json
+collecting worklist for /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/Ownable.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol'])
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol to worklist
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/Ownable.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/Ownable.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/Ownable.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol'])
+Contracts in AgentRegistry.sol_0 (file src/AgentRegistry.sol): ['AgentRegistry']
+Contracts with their chosen addresses: [(274184521717934524641157099916833587200, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol:AgentRegistry'), (274184521717934524641157099916833587201, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IAgentRegistry'), (274184521717934524641157099916833587202, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IAuditLogger'), (274184521717934524641157099916833587203, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IPermissionVault'), (274184521717934524641157099916833587204, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IRevocationRegistry'), (274184521717934524641157099916833587205, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:ISpendTracker'), (274184521717934524641157099916833587206, 'lib/openzeppelin-contracts/contracts/utils/Context.sol:Context'), (274184521717934524641157099916833587207, 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol:Pausable')]
+Working on contract AgentRegistry
+Working on contract AgentRegistry
+Working on contract IAgentRegistry
+Working on contract IAgentRegistry
+Working on contract IAuditLogger
+Working on contract IAuditLogger
+Working on contract IPermissionVault
+Working on contract IPermissionVault
+Working on contract IRevocationRegistry
+Working on contract IRevocationRegistry
+Working on contract ISpendTracker
+Working on contract ISpendTracker
+Working on contract Context
+Working on contract Context
+Working on contract Pausable
+Working on contract Pausable
+For contracts of primary AgentRegistry
+finding primary contract address of /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol:AgentRegistry in [(274184521717934524641157099916833587200, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol:AgentRegistry'), (274184521717934524641157099916833587201, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IAgentRegistry'), (274184521717934524641157099916833587202, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IAuditLogger'), (274184521717934524641157099916833587203, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IPermissionVault'), (274184521717934524641157099916833587204, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IRevocationRegistry'), (274184521717934524641157099916833587205, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:ISpendTracker'), (274184521717934524641157099916833587206, 'lib/openzeppelin-contracts/contracts/utils/Context.sol:Context'), (274184521717934524641157099916833587207, 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol:Pausable')]
+Contracts in SDC AgentRegistry.sol_0: ['AgentRegistry', 'IAgentRegistry', 'IAuditLogger', 'IPermissionVault', 'IRevocationRegistry', 'ISpendTracker', 'Context', 'Pausable']
+Building source tree
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/PermissionVault.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/src/PermissionVault.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/foundry.toml to .certora_internal/26_03_17_11_08_02_417/.certora_sources/foundry.toml
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/specs/PermissionVault.spec to .certora_internal/26_03_17_11_08_02_417/.certora_sources/specs/PermissionVault.spec
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AgentRegistry.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/RevocationRegistry.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/src/RevocationRegistry.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/lib/openzeppelin-contracts/contracts/utils/Pausable.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/SpendTracker.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/src/SpendTracker.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/Ownable.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/lib/openzeppelin-contracts/contracts/access/Ownable.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/specs/certora-permission-vault.conf to .certora_internal/26_03_17_11_08_02_417/.certora_sources/specs/certora-permission-vault.conf
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/lib/openzeppelin-contracts/contracts/utils/Context.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol
+Backing up current .certora_sources to .certora_internal/26_03_17_11_08_02_417/.certora_sources/.pre_autofinders.0
+Running cmd solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0/" --overwrite --allow-paths "/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources",.,"lib/openzeppelin-contracts/contracts" --standard-json
+stdout, stderr = .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stdout.json, .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stderr.json
+Exitcode 0
+Solc run solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0/" --overwrite --allow-paths "/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources",.,"lib/openzeppelin-contracts/contracts" --standard-json time: 0.1706
+reading standard json data from .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stdout.json
+Backing up instrumented .certora_sources to .certora_internal/26_03_17_11_08_02_417/.certora_sources/.post_autofinders.0
+Rolling back .certora_sources to .certora_internal/26_03_17_11_08_02_417/.certora_sources/.pre_autofinders.0 version
+Running cmd solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0/" --overwrite --allow-paths "/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources",.,"lib/openzeppelin-contracts/contracts" --standard-json
+stdout, stderr = .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stdout.json, .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stderr.json
+Exitcode 0
+Solc run solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0/" --overwrite --allow-paths "/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources",.,"lib/openzeppelin-contracts/contracts" --standard-json time: 0.168
+reading standard json data from .certora_internal/26_03_17_11_08_02_417/.certora_config/AgentRegistry.sol_0.standard.stdout.json
+collecting worklist for /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/Ownable.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol'])
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol to worklist
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/Ownable.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/Ownable.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/Ownable.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol'])
+Contracts in AgentRegistry.sol_0 (file .certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol): ['AgentRegistry']
+Contracts with their chosen addresses: [(274184521717934524641157099916833587208, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol:AgentRegistry'), (274184521717934524641157099916833587209, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IAgentRegistry'), (274184521717934524641157099916833587210, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IAuditLogger'), (274184521717934524641157099916833587211, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IPermissionVault'), (274184521717934524641157099916833587212, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IRevocationRegistry'), (274184521717934524641157099916833587213, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:ISpendTracker'), (274184521717934524641157099916833587214, 'lib/openzeppelin-contracts/contracts/utils/Context.sol:Context'), (274184521717934524641157099916833587215, 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol:Pausable')]
+Working on contract AgentRegistry
+Working on contract AgentRegistry
+Working on contract IAgentRegistry
+Working on contract IAgentRegistry
+Working on contract IAuditLogger
+Working on contract IAuditLogger
+Working on contract IPermissionVault
+Working on contract IPermissionVault
+Working on contract IRevocationRegistry
+Working on contract IRevocationRegistry
+Working on contract ISpendTracker
+Working on contract ISpendTracker
+Working on contract Context
+Working on contract Context
+Working on contract Pausable
+Working on contract Pausable
+For contracts of primary AgentRegistry
+finding primary contract address of /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol:AgentRegistry in [(274184521717934524641157099916833587208, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AgentRegistry.sol:AgentRegistry'), (274184521717934524641157099916833587209, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IAgentRegistry'), (274184521717934524641157099916833587210, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IAuditLogger'), (274184521717934524641157099916833587211, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IPermissionVault'), (274184521717934524641157099916833587212, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IRevocationRegistry'), (274184521717934524641157099916833587213, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:ISpendTracker'), (274184521717934524641157099916833587214, 'lib/openzeppelin-contracts/contracts/utils/Context.sol:Context'), (274184521717934524641157099916833587215, 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol:Pausable')]
+Contracts in SDC AgentRegistry.sol_0: ['AgentRegistry', 'IAgentRegistry', 'IAuditLogger', 'IPermissionVault', 'IRevocationRegistry', 'ISpendTracker', 'Context', 'Pausable']
+Backing up instrumented .certora_sources to .certora_internal/26_03_17_11_08_02_417/.certora_sources/.post_autofinders.1
+Rolling back .certora_sources to .certora_internal/26_03_17_11_08_02_417/.certora_sources/.pre_autofinders.0 version
+Libraries to add = []
+
+building file src/AuditLogger.sol
+Running cmd solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1/" --overwrite --allow-paths ".",.,"lib/openzeppelin-contracts/contracts" --standard-json
+stdout, stderr = .certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1.standard.stdout.json, .certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1.standard.stderr.json
+Exitcode 0
+Solc run solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1/" --overwrite --allow-paths ".",.,"lib/openzeppelin-contracts/contracts" --standard-json time: 0.1837
+reading standard json data from .certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1.standard.stdout.json
+collecting worklist for /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/AccessControl.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol to worklist
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/AccessControl.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Contracts in AuditLogger.sol_1 (file src/AuditLogger.sol): ['AuditLogger']
+Contracts with their chosen addresses: [(274184521717934524641157099916833587216, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol:AuditLogger'), (274184521717934524641157099916833587217, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IAgentRegistry'), (274184521717934524641157099916833587218, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IAuditLogger'), (274184521717934524641157099916833587219, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IPermissionVault'), (274184521717934524641157099916833587220, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IRevocationRegistry'), (274184521717934524641157099916833587221, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:ISpendTracker'), (274184521717934524641157099916833587222, 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol:AccessControl'), (274184521717934524641157099916833587223, 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol:IAccessControl'), (274184521717934524641157099916833587224, 'lib/openzeppelin-contracts/contracts/utils/Context.sol:Context'), (274184521717934524641157099916833587225, 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol:Pausable'), (274184521717934524641157099916833587226, 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol:ERC165'), (274184521717934524641157099916833587227, 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol:IERC165')]
+Working on contract AuditLogger
+Working on contract AuditLogger
+Working on contract IAgentRegistry
+Working on contract IAgentRegistry
+Working on contract IAuditLogger
+Working on contract IAuditLogger
+Working on contract IPermissionVault
+Working on contract IPermissionVault
+Working on contract IRevocationRegistry
+Working on contract IRevocationRegistry
+Working on contract ISpendTracker
+Working on contract ISpendTracker
+Working on contract AccessControl
+Working on contract AccessControl
+Working on contract IAccessControl
+Working on contract IAccessControl
+Working on contract Context
+Working on contract Context
+Working on contract Pausable
+Working on contract Pausable
+Working on contract ERC165
+Working on contract ERC165
+Working on contract IERC165
+Working on contract IERC165
+For contracts of primary AuditLogger
+finding primary contract address of /Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol:AuditLogger in [(274184521717934524641157099916833587216, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/AuditLogger.sol:AuditLogger'), (274184521717934524641157099916833587217, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IAgentRegistry'), (274184521717934524641157099916833587218, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IAuditLogger'), (274184521717934524641157099916833587219, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IPermissionVault'), (274184521717934524641157099916833587220, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:IRevocationRegistry'), (274184521717934524641157099916833587221, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/src/interfaces/IBouclier.sol:ISpendTracker'), (274184521717934524641157099916833587222, 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol:AccessControl'), (274184521717934524641157099916833587223, 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol:IAccessControl'), (274184521717934524641157099916833587224, 'lib/openzeppelin-contracts/contracts/utils/Context.sol:Context'), (274184521717934524641157099916833587225, 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol:Pausable'), (274184521717934524641157099916833587226, 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol:ERC165'), (274184521717934524641157099916833587227, 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol:IERC165')]
+Contracts in SDC AuditLogger.sol_1: ['AuditLogger', 'IAgentRegistry', 'IAuditLogger', 'IPermissionVault', 'IRevocationRegistry', 'ISpendTracker', 'AccessControl', 'IAccessControl', 'Context', 'Pausable', 'ERC165', 'IERC165']
+Building source tree
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/AccessControl.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/lib/openzeppelin-contracts/contracts/access/AccessControl.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol
+Copying /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol to .certora_internal/26_03_17_11_08_02_417/.certora_sources/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol
+Backing up current .certora_sources to .certora_internal/26_03_17_11_08_02_417/.certora_sources/.pre_autofinders.1
+Running cmd solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1/" --overwrite --allow-paths "/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources",.,"lib/openzeppelin-contracts/contracts" --standard-json
+stdout, stderr = .certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1.standard.stdout.json, .certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1.standard.stderr.json
+Exitcode 0
+Solc run solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1/" --overwrite --allow-paths "/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources",.,"lib/openzeppelin-contracts/contracts" --standard-json time: 0.3512
+reading standard json data from .certora_internal/26_03_17_11_08_02_417/.certora_config/AuditLogger.sol_1.standard.stdout.json
+collecting worklist for /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/AccessControl.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol to worklist
+Adding a base contract link ref /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol to worklist
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Pausable.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/utils/Context.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/IAccessControl.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/lib/openzeppelin-contracts/contracts/access/AccessControl.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Processing dependencies from file /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol
+available keys: dict_keys(['/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol', '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol', 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol', 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol', 'lib/openzeppelin-contracts/contracts/utils/Context.sol', 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol', 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol'])
+Contracts in AuditLogger.sol_1 (file .certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol): ['AuditLogger']
+Contracts with their chosen addresses: [(274184521717934524641157099916833587228, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol:AuditLogger'), (274184521717934524641157099916833587229, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IAgentRegistry'), (274184521717934524641157099916833587230, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IAuditLogger'), (274184521717934524641157099916833587231, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IPermissionVault'), (274184521717934524641157099916833587232, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IRevocationRegistry'), (274184521717934524641157099916833587233, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:ISpendTracker'), (274184521717934524641157099916833587234, 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol:AccessControl'), (274184521717934524641157099916833587235, 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol:IAccessControl'), (274184521717934524641157099916833587236, 'lib/openzeppelin-contracts/contracts/utils/Context.sol:Context'), (274184521717934524641157099916833587237, 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol:Pausable'), (274184521717934524641157099916833587238, 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol:ERC165'), (274184521717934524641157099916833587239, 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol:IERC165')]
+Working on contract AuditLogger
+Working on contract AuditLogger
+Working on contract IAgentRegistry
+Working on contract IAgentRegistry
+Working on contract IAuditLogger
+Working on contract IAuditLogger
+Working on contract IPermissionVault
+Working on contract IPermissionVault
+Working on contract IRevocationRegistry
+Working on contract IRevocationRegistry
+Working on contract ISpendTracker
+Working on contract ISpendTracker
+Working on contract AccessControl
+Working on contract AccessControl
+Working on contract IAccessControl
+Working on contract IAccessControl
+Working on contract Context
+Working on contract Context
+Working on contract Pausable
+Working on contract Pausable
+Working on contract ERC165
+Working on contract ERC165
+Working on contract IERC165
+Working on contract IERC165
+For contracts of primary AuditLogger
+finding primary contract address of /Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol:AuditLogger in [(274184521717934524641157099916833587228, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/AuditLogger.sol:AuditLogger'), (274184521717934524641157099916833587229, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IAgentRegistry'), (274184521717934524641157099916833587230, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IAuditLogger'), (274184521717934524641157099916833587231, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IPermissionVault'), (274184521717934524641157099916833587232, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:IRevocationRegistry'), (274184521717934524641157099916833587233, '/Users/yashrajpardeshi/Projects/Bouclier/contracts/.certora_internal/26_03_17_11_08_02_417/.certora_sources/src/interfaces/IBouclier.sol:ISpendTracker'), (274184521717934524641157099916833587234, 'lib/openzeppelin-contracts/contracts/access/AccessControl.sol:AccessControl'), (274184521717934524641157099916833587235, 'lib/openzeppelin-contracts/contracts/access/IAccessControl.sol:IAccessControl'), (274184521717934524641157099916833587236, 'lib/openzeppelin-contracts/contracts/utils/Context.sol:Context'), (274184521717934524641157099916833587237, 'lib/openzeppelin-contracts/contracts/utils/Pausable.sol:Pausable'), (274184521717934524641157099916833587238, 'lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol:ERC165'), (274184521717934524641157099916833587239, 'lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol:IERC165')]
+Contracts in SDC AuditLogger.sol_1: ['AuditLogger', 'IAgentRegistry', 'IAuditLogger', 'IPermissionVault', 'IRevocationRegistry', 'ISpendTracker', 'AccessControl', 'IAccessControl', 'Context', 'Pausable', 'ERC165', 'IERC165']
+Backing up instrumented .certora_sources to .certora_internal/26_03_17_11_08_02_417/.certora_sources/.post_autofinders.2
+Rolling back .certora_sources to .certora_internal/26_03_17_11_08_02_417/.certora_sources/.pre_autofinders.1 version
+Libraries to add = []
+
+building file src/PermissionVault.sol
+Running cmd solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/PermissionVault.sol_2/" --overwrite --allow-paths ".",.,"lib/openzeppelin-contracts/contracts" --standard-json
+stdout, stderr = .certora_internal/26_03_17_11_08_02_417/.certora_config/PermissionVault.sol_2.standard.stdout.json, .certora_internal/26_03_17_11_08_02_417/.certora_config/PermissionVault.sol_2.standard.stderr.json
+Exitcode 0
+Solc run solc -o ".certora_internal/26_03_17_11_08_02_417/.certora_config/PermissionVault.sol_2/" --overwrite --allow-paths ".",.,"lib/openzeppelin-contracts/contracts" --standard-json time: 0.1642
+reading standard json data from .certora_internal/26_03_17_11_08_02_417/.certora_config/PermissionVault.sol_2.standard.stdout.json
+build failed

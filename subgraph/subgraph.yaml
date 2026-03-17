@@ -1,0 +1,127 @@
+specVersion: 0.0.5
+description: Bouclier AI Agent Trust Layer — on-chain event index
+repository: https://github.com/bouclier/bouclier
+
+schema:
+  file: ./schema.graphql
+
+dataSources:
+  - kind: ethereum
+    name: AgentRegistry
+    network: base-sepolia
+    source:
+      address: "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb"
+      abi: AgentRegistry
+      startBlock: 38959867
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Agent
+      abis:
+        - name: AgentRegistry
+          file: ./abis/AgentRegistry.json
+      eventHandlers:
+        - event: AgentRegistered(indexed bytes32,indexed address,indexed address,string,uint48)
+          handler: handleAgentRegistered
+        - event: AgentStatusUpdated(indexed bytes32,uint8)
+          handler: handleAgentStatusUpdated
+      file: ./src/agentRegistry.ts
+
+  - kind: ethereum
+    name: RevocationRegistry
+    network: base-sepolia
+    source:
+      address: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa"
+      abi: RevocationRegistry
+      startBlock: 38959867
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - RevocationEvent
+        - Agent
+      abis:
+        - name: RevocationRegistry
+          file: ./abis/RevocationRegistry.json
+      eventHandlers:
+        - event: AgentRevoked(indexed bytes32,indexed address,uint8,uint48)
+          handler: handleAgentRevoked
+        - event: AgentReinstated(indexed bytes32,indexed address,uint48)
+          handler: handleAgentReinstated
+      file: ./src/revocationRegistry.ts
+
+  - kind: ethereum
+    name: PermissionVault
+    network: base-sepolia
+    source:
+      address: "0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7"
+      abi: PermissionVault
+      startBlock: 38959867
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PermissionGrant
+        - PermissionViolation
+        - Agent
+      abis:
+        - name: PermissionVault
+          file: ./abis/PermissionVault.json
+      eventHandlers:
+        - event: PermissionGranted(indexed bytes32,indexed bytes32,uint48)
+          handler: handlePermissionGranted
+        - event: PermissionRevoked(indexed bytes32,indexed address)
+          handler: handlePermissionRevoked
+        - event: PermissionViolation(indexed bytes32,indexed address,bytes4,string)
+          handler: handlePermissionViolation
+      file: ./src/permissionVault.ts
+
+  - kind: ethereum
+    name: AuditLogger
+    network: base-sepolia
+    source:
+      address: "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735"
+      abi: AuditLogger
+      startBlock: 38959867
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AuditEvent
+        - Agent
+      abis:
+        - name: AuditLogger
+          file: ./abis/AuditLogger.json
+      eventHandlers:
+        - event: ActionLogged(indexed bytes32,indexed bytes32,indexed address,bytes4,bool,uint48)
+          handler: handleActionLogged
+        - event: IPFSCIDAdded(indexed bytes32,string)
+          handler: handleIPFSCIDAdded
+      file: ./src/auditLogger.ts
+
+  - kind: ethereum
+    name: SpendTracker
+    network: base-sepolia
+    source:
+      address: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1"
+      abi: SpendTracker
+      startBlock: 38959867
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - SpendRecord
+        - Agent
+      abis:
+        - name: SpendTracker
+          file: ./abis/SpendTracker.json
+      eventHandlers:
+        - event: SpendRecorded(indexed bytes32,uint256,uint256)
+          handler: handleSpendRecorded
+      file: ./src/spendTracker.ts

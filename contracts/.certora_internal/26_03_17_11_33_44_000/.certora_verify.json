@@ -1,0 +1,8 @@
+{
+    "importFilesToOrigRelpaths": {},
+    "primary_contract": "RevocationRegistry",
+    "specfile": "specs/RevocationRegistry.spec",
+    "specfileOrigRelpath": "specs/RevocationRegistry.spec",
+    "specfilesToImportDecls": {},
+    "type": "spec"
+}
