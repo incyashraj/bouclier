@@ -241,4 +241,10 @@ export const auditLoggerAbi = [
       { name: "allowed",    type: "bool",    indexed: false },
     ],
   },
+  {
+    type: "function", name: "getTotalEvents",
+    inputs:  [{ name: "agentId", type: "bytes32" }],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
 ] as const;

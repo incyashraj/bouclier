@@ -19,6 +19,7 @@ export function MarketingNav() {
     { label: "Registry", href: "/registry" },
     { label: "Nodes", href: "/nodes" },
     { label: "Audits", href: "/audits" },
+    { label: "Compare", href: "/compare" },
     { label: "Developers", href: "/developers" },
     { label: "Docs", href: "/docs" },
     { label: "Pricing", href: "/pricing" },
@@ -51,7 +52,8 @@ export function MarketingNav() {
                 <Link href="/protocol" className="px-4 py-3 border-b border-border hover:bg-body hover:text-accent transition-colors">Protocol</Link>
                 <Link href="/registry" className="px-4 py-3 border-b border-border hover:bg-body hover:text-accent transition-colors">Registry</Link>
                 <Link href="/nodes" className="px-4 py-3 border-b border-border hover:bg-body hover:text-accent transition-colors">Nodes</Link>
-                <Link href="/audits" className="px-4 py-3 hover:bg-body hover:text-accent transition-colors">Audits</Link>
+                <Link href="/audits" className="px-4 py-3 border-b border-border hover:bg-body hover:text-accent transition-colors">Audits</Link>
+                <Link href="/compare" className="px-4 py-3 hover:bg-body hover:text-accent transition-colors">Compare</Link>
               </div>
             </div>
 

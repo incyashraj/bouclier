@@ -207,6 +207,24 @@ export class BouclierClient {
     }) as Promise<Hex[]>;
   }
 
+  async getTotalEvents(agentId: Hex): Promise<bigint> {
+    return this.publicClient.readContract({
+      address: this.addresses.auditLogger,
+      abi:     auditLoggerAbi,
+      functionName: "getTotalEvents",
+      args:    [agentId],
+    }) as Promise<bigint>;
+  }
+
+  async getAuditTrail(
+    agentId: Hex,
+    offset: bigint = 0n,
+    limit: bigint = 50n
+  ): Promise<AuditRecord[]> {
+    const eventIds = await this.getAgentHistory(agentId, offset, limit);
+    return Promise.all(eventIds.map((id) => this.getAuditRecord(id)));
+  }
+
   // ── Mappers ───────────────────────────────────────────────────
 
   private _mapAgentRecord(raw: {
