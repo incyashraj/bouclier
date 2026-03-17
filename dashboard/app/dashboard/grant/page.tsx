@@ -62,14 +62,51 @@ export default function GrantPage() {
     e.preventDefault();
     if (!contracts || !chainId || !address) return;
 
-    // Use nonce if available, otherwise default to 0 for mock payload preview
     const currentNonce = nonce ?? 0n;
     
     // Ensure agentId is strictly 32 bytes (66 chars including 0x)
     const finalAgentId = (agentId.startsWith("0x") ? agentId : "0x" + agentId).padEnd(66, "0") as `0x${string}`;
 
+    const validFromTs = ~~(Date.now() / 1000);
+    const validUntilTs = validFromTs + Number(validDays) * 86400;
+
     try {
-      // Create scope based on ABI tuple
+      // 1. Sign EIP-712 typed data matching the contract's SCOPE_TYPEHASH
+      const sig = await signTypedDataAsync({
+        domain: {
+          name: "BouclierPermissionVault",
+          version: "1",
+          chainId,
+          verifyingContract: contracts.permissionVault,
+        },
+        types: {
+          PermissionScope: [
+            { name: "agentId", type: "bytes32" },
+            { name: "nonce", type: "uint256" },
+            { name: "dailySpendCapUSD", type: "uint256" },
+            { name: "perTxSpendCapUSD", type: "uint256" },
+            { name: "validFrom", type: "uint48" },
+            { name: "validUntil", type: "uint48" },
+            { name: "allowAnyProtocol", type: "bool" },
+            { name: "allowAnyToken", type: "bool" },
+          ],
+        },
+        primaryType: "PermissionScope",
+        message: {
+          agentId: finalAgentId,
+          nonce: currentNonce,
+          dailySpendCapUSD: parseEther(dailyCap),
+          perTxSpendCapUSD: parseEther(perTxCap),
+          validFrom: validFromTs,
+          validUntil: validUntilTs,
+          allowAnyProtocol: allowAnyProtocol,
+          allowAnyToken: true,
+        },
+      });
+
+      setSignature(sig);
+
+      // 2. Build the full scope struct for the contract call
       const scopeData = {
         agentId: finalAgentId,
         allowedProtocols: [] as `0x${string}`[],
@@ -77,8 +114,8 @@ export default function GrantPage() {
         allowedTokens: [] as `0x${string}`[],
         dailySpendCapUSD: parseEther(dailyCap),
         perTxSpendCapUSD: parseEther(perTxCap),
-        validFrom: ~~(Date.now() / 1000),
-        validUntil: ~~(Date.now() / 1000) + Number(validDays) * 86400,
+        validFrom: validFromTs,
+        validUntil: validUntilTs,
         allowAnyProtocol: allowAnyProtocol,
         allowAnyToken: true,
         revoked: false,
@@ -89,30 +126,19 @@ export default function GrantPage() {
         allowedChainId: BigInt(chainId),
       };
 
-      // Mock domain signing to generate standard typed data representation
-      const domain = {
-        name: "BouclierPermissionVault",
-        version: "1",
-        chainId,
-        verifyingContract: contracts.permissionVault,
-      };
-
-      // Mock Signer Logic (real EIP-712 requires full types matching Solidity precisely)
-      // Since complete EIP-712 types aren't fully exposed, we'll try abstract execution
-      // and directly allow transaction submission on the dashboard pattern. 
-      // (Bypassing strictly signed EIP-712 for dashboard MVP execution)
-
+      // 3. Submit on-chain with the real signature
       setStep(3);
 
       writeContract({
         address: contracts.permissionVault,
         abi: permissionVaultAbi,
         functionName: "grantPermission",
-        args: [finalAgentId, scopeData as any, "0x" /* mock signature for now to avoid SDK typing mismatch */],
+        args: [finalAgentId, scopeData as any, sig],
       });
 
-    } catch (err) {
-      console.error("Sign Error:", err);
+    } catch (err: any) {
+      console.error("Sign/Grant Error:", err);
+      toast.error(err?.shortMessage || err?.message || "Signature rejected");
     }
   };
 
