@@ -36,10 +36,16 @@ import {
   Unlock,
   Users,
   TrendingUp,
+  Search,
+  Copy,
+  Check,
+  Plus,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { parseEther } from "viem";
+import { toast } from "sonner";
 
 /* ───────────── helpers ───────────── */
 const E18 = 10n ** 18n;
@@ -57,6 +63,24 @@ function fmtDate(ts: number): string {
 function fmtShort(hex: string, head = 10, tail = 6): string {
   if (hex.length <= head + tail + 2) return hex;
   return `${hex.slice(0, head)}…${hex.slice(-tail)}`;
+}
+
+function copyToClipboard(text: string, label = "Copied") {
+  navigator.clipboard.writeText(text);
+  toast.success(label, { description: text.slice(0, 32) + (text.length > 32 ? "…" : ""), duration: 2000 });
+}
+
+function CopyBtn({ text, label }: { text: string; label?: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      onClick={(e) => { e.stopPropagation(); copyToClipboard(text, label); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
+      className="p-1 hover:bg-border/50 rounded-sm transition-colors"
+      title="Copy to clipboard"
+    >
+      {copied ? <Check size={11} className="text-green-500" /> : <Copy size={11} className="text-text-muted" />}
+    </button>
+  );
 }
 
 const TargetDot = ({ active = false, color = "accent" }: { active?: boolean; color?: string }) => {
@@ -151,6 +175,7 @@ function AgentCard({ agentId, chainId, isSelected, onSelect }: {
           <span className="font-mono text-sm font-bold text-text group-hover:text-accent transition-colors">
             {fmtShort(agentId)}
           </span>
+          <CopyBtn text={agentId} label="Agent ID copied" />
           <span className={`text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full border uppercase ${statusBg}`}>
             {isRev ? "Revoked" : status}
           </span>
@@ -307,7 +332,10 @@ function OverviewTab({ agentId, chainId }: { agentId: `0x${string}`; chainId: nu
           ].map(([label, val]) => (
             <div key={label as string} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-1">
               <span className="text-[10px] font-mono uppercase tracking-widest text-text-muted">{label as string}</span>
-              <span className="text-text font-mono text-[11px] break-all">{val as string}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-text font-mono text-[11px] break-all">{val as string}</span>
+                {(val as string).startsWith("0x") && (val as string).length > 10 && <CopyBtn text={val as string} label={`${label} copied`} />}
+              </div>
             </div>
           ))}
         </div>
@@ -743,10 +771,103 @@ function AgentDetailPanel({ agentId, chainId, onClose }: {
 /* ═══════════════════════════════════════════════════════
    MAIN DASHBOARD PAGE
    ═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   REGISTER AGENT PANEL – inline agent registration
+   ═══════════════════════════════════════════════════════ */
+function RegisterAgentPanel({ chainId, onSuccess }: { chainId: number; onSuccess: () => void }) {
+  const contracts = getContracts(chainId);
+  const [wallet, setWallet] = useState("");
+  const [model, setModel] = useState("");
+  const [metadataCID, setMetadataCID] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const handleRegister = () => {
+    if (!wallet || !model) return;
+    writeContract({
+      address: contracts.agentRegistry,
+      abi: agentRegistryAbi,
+      functionName: "register",
+      args: [
+        wallet as `0x${string}`,
+        model,
+        ("0x" + "0".repeat(64)) as `0x${string}`,
+        metadataCID || "",
+      ],
+    });
+  };
+
+  if (isSuccess) {
+    toast.success("Agent registered!", { description: `Tx: ${hash?.slice(0, 20)}…` });
+    onSuccess();
+    setOpen(false);
+    setWallet(""); setModel(""); setMetadataCID("");
+  }
+
+  if (!open) {
+    return (
+      <Button variant="primary" size="sm" onClick={() => setOpen(true)} className="uppercase text-[11px] tracking-widest">
+        <Plus size={14} className="mr-1.5" /> Register Agent
+      </Button>
+    );
+  }
+
+  return (
+    <div className="border border-accent/20 bg-white rounded-sm p-5 shadow-sm">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Database size={14} className="text-accent" />
+          <span className="text-[11px] font-mono uppercase tracking-widest font-bold">Register New Agent</span>
+        </div>
+        <button onClick={() => setOpen(false)} className="p-1 hover:bg-surface rounded-sm"><X size={14} className="text-text-muted" /></button>
+      </div>
+
+      {isPending || isConfirming ? (
+        <div className="flex flex-col items-center py-6">
+          <div className="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin mb-3" />
+          <p className="text-[11px] font-mono uppercase tracking-widest">{isPending ? "Awaiting signature…" : "Mining on-chain…"}</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {error && (
+            <div className="p-3 border border-red-500/20 bg-red-500/5 rounded-sm text-red-600 text-xs font-mono">
+              {(error as any).shortMessage || error.message}
+            </div>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-[10px] font-mono font-bold tracking-wider uppercase text-text-muted mb-1.5 block">Agent Wallet Address *</label>
+              <input type="text" value={wallet} onChange={(e) => setWallet(e.target.value)} placeholder="0x…" className="w-full bg-white border border-border px-3 py-2 text-sm font-mono focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20 rounded-sm" />
+            </div>
+            <div>
+              <label className="text-[10px] font-mono font-bold tracking-wider uppercase text-text-muted mb-1.5 block">Model ID *</label>
+              <input type="text" value={model} onChange={(e) => setModel(e.target.value)} placeholder="e.g. gpt-4-turbo" className="w-full bg-white border border-border px-3 py-2 text-sm font-mono focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20 rounded-sm" />
+            </div>
+          </div>
+          <div>
+            <label className="text-[10px] font-mono font-bold tracking-wider uppercase text-text-muted mb-1.5 block">Metadata CID (optional)</label>
+            <input type="text" value={metadataCID} onChange={(e) => setMetadataCID(e.target.value)} placeholder="Qm… or bafy…" className="w-full bg-white border border-border px-3 py-2 text-sm font-mono focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20 rounded-sm" />
+          </div>
+          <Button variant="primary" onClick={handleRegister} disabled={!wallet || !model} className="w-full uppercase text-[11px] tracking-widest h-10 font-mono">
+            Register Agent On-Chain
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAIN DASHBOARD PAGE
+   ═══════════════════════════════════════════════════════ */
 export default function DashboardPage() {
   const { address, chainId, isConnected } = useAccount();
   const deployed = isConnected && chainId ? isDeployed(chainId) : false;
   const [selectedAgent, setSelectedAgent] = useState<`0x${string}` | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showRegister, setShowRegister] = useState(false);
 
   const { data: agentIds, isLoading, refetch } = useReadContract({
     address: isConnected && chainId && deployed
@@ -826,15 +947,26 @@ export default function DashboardPage() {
           <StatCard icon={Activity} label="Contracts" value="5" sub="Registry · Vault · Tracker · Logger · Revoke" />
         </div>
 
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
           <h3 className="font-bold text-lg tracking-tight">Your Agents</h3>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative">
+              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <input
+                type="text"
+                placeholder="Filter agents…"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="bg-white border border-border pl-8 pr-3 py-1.5 text-xs font-mono focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20 transition-all rounded-sm w-48"
+              />
+            </div>
             <Button variant="outline" size="sm" onClick={() => refetch()} className="uppercase text-[11px] tracking-widest">
               <RefreshCw size={12} className="mr-1.5" /> Refresh
             </Button>
+            <RegisterAgentPanel chainId={chainId!} onSuccess={() => { refetch(); setShowRegister(false); }} />
             <Link href="/dashboard/grant">
-              <Button variant="primary" size="sm" className="uppercase text-[11px] tracking-widest pl-4">
-                <span className="mr-2 text-xl font-light">+</span> New Agent Policy
+              <Button variant="outline" size="sm" className="uppercase text-[11px] tracking-widest">
+                <Sliders size={12} className="mr-1.5" /> Grant Policy
               </Button>
             </Link>
           </div>
@@ -869,9 +1001,12 @@ export default function DashboardPage() {
           <>
             <p className="text-xs font-mono text-text-muted mb-4">
               Click an agent to view details, set permissions, and monitor audit trails.
+              {searchTerm && <span className="text-accent ml-2">Filtering by: &ldquo;{searchTerm}&rdquo;</span>}
             </p>
             <div className="space-y-3">
-              {ids.map((id) => (
+              {ids
+                .filter((id) => !searchTerm || id.toLowerCase().includes(searchTerm.toLowerCase()))
+                .map((id) => (
                 <AgentCard
                   key={id}
                   agentId={id}
@@ -880,6 +1015,11 @@ export default function DashboardPage() {
                   onSelect={() => setSelectedAgent(selectedAgent === id ? null : id)}
                 />
               ))}
+              {ids.length > 0 && ids.filter((id) => !searchTerm || id.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 && (
+                <div className="text-center py-8 text-text-muted text-sm font-mono">
+                  No agents match &ldquo;{searchTerm}&rdquo;
+                </div>
+              )}
             </div>
 
             {selectedAgent && (

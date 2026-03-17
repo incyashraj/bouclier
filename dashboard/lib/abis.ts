@@ -41,6 +41,25 @@ export const agentRegistryAbi = [
     inputs: [{ name: "agentId", type: "bytes32" }],
     outputs: [{ name: "", type: "bool" }],
   },
+  {
+    name: "register",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "agentWallet",    type: "address" },
+      { name: "model",          type: "string"  },
+      { name: "parentAgentId",  type: "bytes32" },
+      { name: "metadataCID",    type: "string"  },
+    ],
+    outputs: [{ name: "agentId", type: "bytes32" }],
+  },
+  {
+    name: "totalAgents",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
 ] as const;
 
 export const revocationRegistryAbi = [

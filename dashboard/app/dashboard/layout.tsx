@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 // The simple dot and line classes match the new architecture
 const GridCross = ({ className = "" }: { className?: string }) => (
@@ -22,6 +24,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans text-text">
@@ -57,19 +60,63 @@ export default function DashboardLayout({
             </nav>
           </div>
 
-          <ConnectButton 
-             showBalance={false} 
-             chainStatus="icon"
-          />
+          <div className="flex items-center gap-3">
+            <ConnectButton 
+               showBalance={false} 
+               chainStatus="icon"
+            />
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden p-2 text-text-muted hover:text-text transition-colors"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle navigation"
+            >
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown */}
+        {mobileOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 z-50 border-b border-border bg-surface shadow-lg">
+            <nav className="max-w-[1400px] mx-auto flex flex-col border-x border-border">
+              {links.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`px-6 py-4 text-[13px] font-semibold tracking-wide uppercase border-b border-border last:border-b-0 transition-colors ${
+                    pathname === l.href
+                      ? "text-accent bg-accent/5"
+                      : "text-text-muted hover:text-text hover:bg-surface"
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Page content strictly bounded inside the borders */}
       <main className="w-full relative flex-1">
-        <div className="max-w-[1400px] w-full min-h-[calc(100vh-80px)] mx-auto border-x border-border relative bg-background">
+        <div className="max-w-[1400px] w-full min-h-[calc(100vh-80px-48px)] mx-auto border-x border-border relative bg-background">
           {children}
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border bg-surface">
+        <div className="max-w-[1400px] mx-auto border-x border-border px-6 py-3 flex items-center justify-between text-[10px] font-mono tracking-wider text-text-muted uppercase">
+          <span>Bouclier Protocol · Base Sepolia</span>
+          <div className="flex items-center gap-4">
+            <a href="https://github.com/incyashraj/bouclier" target="_blank" rel="noopener noreferrer" className="hover:text-text transition-colors">GitHub</a>
+            <a href="https://sepolia.basescan.org" target="_blank" rel="noopener noreferrer" className="hover:text-text transition-colors">Basescan</a>
+            <span>v1.0.0</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

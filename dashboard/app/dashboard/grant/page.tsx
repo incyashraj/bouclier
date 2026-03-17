@@ -5,10 +5,13 @@ import { useAccount, useReadContract, useWriteContract, useSignTypedData, useWai
 import { getContracts, isDeployed } from "@/lib/contracts";
 import { agentRegistryAbi, permissionVaultAbi } from "@/lib/abis";
 import { Button } from "@/components/ui/Button";
-import { ShieldAlert, ShieldCheck, Database, Sliders } from "lucide-react";
+import { ShieldAlert, ShieldCheck, Database, Sliders, ChevronDown, Clock, Zap, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { parseEther } from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { toast } from "sonner";
+
+function fmtShort(hex: string, h = 10, t = 6) { return hex.length <= h + t + 2 ? hex : `${hex.slice(0, h)}…${hex.slice(-t)}`; }
 
 export default function GrantPage() {
   const { isConnected, chainId, address } = useAccount();
@@ -19,12 +22,25 @@ export default function GrantPage() {
 
   // Form State
   const [agentId, setAgentId] = useState("");
-  const [dailyCap, setDailyCap] = useState("1000"); // USD in standard format, will convert to 10^18
+  const [dailyCap, setDailyCap] = useState("1000");
   const [perTxCap, setPerTxCap] = useState("100");
   const [allowAnyProtocol, setAllowAnyProtocol] = useState(true);
+  const [validDays, setValidDays] = useState("365");
+  const [windowStart, setWindowStart] = useState("0");
+  const [windowEnd, setWindowEnd] = useState("24");
   const [signature, setSignature] = useState<`0x${string}`>();
 
   const contracts = isConnected && chainId ? getContracts(chainId) : null;
+
+  // Fetch user's agents for the picker
+  const { data: ownedAgentIds } = useReadContract({
+    address: contracts?.agentRegistry,
+    abi: agentRegistryAbi,
+    functionName: "getAgentsByOwner",
+    args: address ? [address] : undefined,
+    query: { enabled: !!address && deployed },
+  });
+  const agentOptions = (ownedAgentIds as `0x${string}`[] | undefined) ?? [];
 
   // Read nonces
   const { data: nonce } = useReadContract({
@@ -59,16 +75,16 @@ export default function GrantPage() {
         allowedProtocols: [] as `0x${string}`[],
         allowedSelectors: [] as `0x${string}`[],
         allowedTokens: [] as `0x${string}`[],
-        dailySpendCapUSD: parseEther(dailyCap), // 10^18 format
+        dailySpendCapUSD: parseEther(dailyCap),
         perTxSpendCapUSD: parseEther(perTxCap),
-        validFrom: ~~(Date.now() / 1000), // now
-        validUntil: ~~(Date.now() / 1000) + 31536000, // +1 year
+        validFrom: ~~(Date.now() / 1000),
+        validUntil: ~~(Date.now() / 1000) + Number(validDays) * 86400,
         allowAnyProtocol: allowAnyProtocol,
         allowAnyToken: true,
         revoked: false,
         grantHash: "0x" + "0".repeat(64) as `0x${string}`,
-        windowStartHour: 0,
-        windowEndHour: 24,
+        windowStartHour: Number(windowStart),
+        windowEndHour: Number(windowEnd),
         windowDaysMask: 127,
         allowedChainId: BigInt(chainId),
       };
@@ -178,10 +194,37 @@ export default function GrantPage() {
 
            <div className="p-8">
              {step === 1 && (
-               <form onSubmit={(e) => { e.preventDefault(); setStep(2); }} className="space-y-6">
+               <form onSubmit={(e) => { e.preventDefault(); if (agentId.length === 66) setStep(2); }} className="space-y-6">
+                 {/* Agent Picker from on-chain registry */}
+                 {agentOptions.length > 0 && (
+                   <div>
+                     <label className="text-[11px] font-mono font-bold tracking-wider uppercase text-text-muted mb-2 block">
+                       Your Registered Agents
+                     </label>
+                     <div className="space-y-2">
+                       {agentOptions.map((id) => (
+                         <button
+                           key={id}
+                           type="button"
+                           onClick={() => setAgentId(id)}
+                           className={`w-full text-left px-4 py-3 border font-mono text-xs transition-all rounded-sm flex items-center justify-between group ${
+                             agentId === id
+                               ? "border-accent bg-accent/5 text-accent"
+                               : "border-border bg-body text-text-muted hover:border-text hover:text-text"
+                           }`}
+                         >
+                           <span className="truncate">{fmtShort(id, 14, 8)}</span>
+                           {agentId === id && <ShieldCheck size={14} className="text-accent flex-shrink-0 ml-2" />}
+                         </button>
+                       ))}
+                     </div>
+                   </div>
+                 )}
+
+                 {/* Manual entry fallback */}
                  <div>
                    <label className="text-[11px] font-mono font-bold tracking-wider uppercase text-text-muted mb-2 block">
-                     Target Agent Hash ID
+                     {agentOptions.length > 0 ? "Or Paste Agent ID Manually" : "Target Agent Hash ID"}
                    </label>
                    <input
                      type="text"
@@ -191,8 +234,12 @@ export default function GrantPage() {
                      className="w-full bg-body border border-border px-4 py-3 text-sm font-mono focus:outline-none focus:border-text transition-all rounded-sm"
                      required
                    />
+                   {agentId.length > 0 && agentId.length !== 66 && (
+                     <p className="text-[10px] font-mono text-yellow-600 mt-1">Agent ID must be 66 characters (0x + 64 hex digits)</p>
+                   )}
                  </div>
-                 <Button type="submit" variant="primary" className="w-full font-mono uppercase tracking-widest text-[11px] h-12">
+
+                 <Button type="submit" variant="primary" disabled={agentId.length !== 66} className="w-full font-mono uppercase tracking-widest text-[11px] h-12 disabled:opacity-40">
                    Proceed to Limits →
                  </Button>
                </form>
@@ -221,6 +268,54 @@ export default function GrantPage() {
                        type="number"
                        value={perTxCap}
                        onChange={(e) => setPerTxCap(e.target.value)}
+                       className="w-full bg-body border border-border px-4 py-3 text-sm font-mono focus:outline-none focus:border-text transition-all rounded-sm"
+                       required
+                     />
+                   </div>
+                 </div>
+
+                 {/* Validity Period */}
+                 <div>
+                   <label className="text-[11px] font-mono font-bold tracking-wider uppercase text-text-muted mb-2 block flex items-center gap-2">
+                     <Clock size={12} /> Validity Period (Days)
+                   </label>
+                   <input
+                     type="number"
+                     min="1"
+                     max="3650"
+                     value={validDays}
+                     onChange={(e) => setValidDays(e.target.value)}
+                     className="w-full bg-body border border-border px-4 py-3 text-sm font-mono focus:outline-none focus:border-text transition-all rounded-sm"
+                     required
+                   />
+                 </div>
+
+                 {/* Active Window */}
+                 <div className="grid grid-cols-2 gap-6">
+                   <div>
+                     <label className="text-[11px] font-mono font-bold tracking-wider uppercase text-text-muted mb-2 block flex items-center gap-2">
+                       <Zap size={12} /> Window Start (UTC Hour)
+                     </label>
+                     <input
+                       type="number"
+                       min="0"
+                       max="23"
+                       value={windowStart}
+                       onChange={(e) => setWindowStart(e.target.value)}
+                       className="w-full bg-body border border-border px-4 py-3 text-sm font-mono focus:outline-none focus:border-text transition-all rounded-sm"
+                       required
+                     />
+                   </div>
+                   <div>
+                     <label className="text-[11px] font-mono font-bold tracking-wider uppercase text-text-muted mb-2 block flex items-center gap-2">
+                       <Zap size={12} /> Window End (UTC Hour)
+                     </label>
+                     <input
+                       type="number"
+                       min="0"
+                       max="24"
+                       value={windowEnd}
+                       onChange={(e) => setWindowEnd(e.target.value)}
                        className="w-full bg-body border border-border px-4 py-3 text-sm font-mono focus:outline-none focus:border-text transition-all rounded-sm"
                        required
                      />
@@ -265,6 +360,14 @@ export default function GrantPage() {
                      <p className="font-mono text-xs text-text-muted mt-2 truncate w-full max-w-sm">
                        Hash: {hash}
                      </p>
+                     <a
+                       href={`https://sepolia.basescan.org/tx/${hash}`}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className="text-[10px] font-mono text-accent hover:underline mt-1 inline-flex items-center gap-1"
+                     >
+                       View on Basescan <ExternalLink size={10} />
+                     </a>
                      <Link href="/dashboard">
                        <Button variant="outline" className="mt-8 font-mono uppercase tracking-widest text-[11px]">View Dashboard</Button>
                      </Link>
