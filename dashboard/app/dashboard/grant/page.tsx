@@ -265,7 +265,7 @@ export default function GrantPage() {
                      <p className="font-mono text-xs text-text-muted mt-2 truncate w-full max-w-sm">
                        Hash: {hash}
                      </p>
-                     <Link href={`/dashboard/${agentId}`}>
+                     <Link href="/dashboard">
                        <Button variant="outline" className="mt-8 font-mono uppercase tracking-widest text-[11px]">View Dashboard</Button>
                      </Link>
                    </div>
