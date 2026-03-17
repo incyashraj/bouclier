@@ -6,6 +6,7 @@ import {
   useReadContract,
   useWriteContract,
   useWaitForTransactionReceipt,
+  useSignTypedData,
 } from "wagmi";
 import Link from "next/link";
 import { getContracts, isDeployed } from "@/lib/contracts";
@@ -406,13 +407,21 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
     functionName: "getActiveScope", args: [agentId],
   });
 
+  // Read on-chain nonce for EIP-712 replay protection
+  const { data: nonce } = useReadContract({
+    address: contracts.permissionVault, abi: permissionVaultAbi,
+    functionName: "grantNonces", args: [agentId],
+  });
+
   const [dailyCap, setDailyCap] = useState("1000");
   const [perTxCap, setPerTxCap] = useState("100");
   const [allowAnyProtocol, setAllowAnyProtocol] = useState(true);
   const [validDays, setValidDays] = useState("365");
   const [windowStart, setWindowStart] = useState("0");
   const [windowEnd, setWindowEnd] = useState("24");
+  const [signing, setSigning] = useState(false);
 
+  const { signTypedDataAsync } = useSignTypedData();
   const { writeContract: writeGrant, data: grantHash, isPending: grantPending, error: grantError } = useWriteContract();
   const { isLoading: grantConfirming, isSuccess: grantConfirmed } = useWaitForTransactionReceipt({ hash: grantHash });
 
@@ -421,33 +430,83 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
 
   const hasActiveScope = scope && scope.dailySpendCapUSD > 0n && !scope.revoked;
 
-  const handleGrant = () => {
+  const handleGrant = async () => {
     if (!address) return;
+    setSigning(true);
+
     const now = ~~(Date.now() / 1000);
-    const scopeData = {
-      agentId,
-      allowedProtocols: [] as `0x${string}`[],
-      allowedSelectors: [] as `0x${string}`[],
-      allowedTokens: [] as `0x${string}`[],
-      dailySpendCapUSD: parseEther(dailyCap),
-      perTxSpendCapUSD: parseEther(perTxCap),
-      validFrom: now,
-      validUntil: now + Number(validDays) * 86400,
-      allowAnyProtocol,
-      allowAnyToken: true,
-      revoked: false,
-      grantHash: ("0x" + "0".repeat(64)) as `0x${string}`,
-      windowStartHour: Number(windowStart),
-      windowEndHour: Number(windowEnd),
-      windowDaysMask: 127,
-      allowedChainId: BigInt(chainId),
-    };
-    writeGrant({
-      address: contracts.permissionVault,
-      abi: permissionVaultAbi,
-      functionName: "grantPermission",
-      args: [agentId, scopeData as any, "0x"],
-    });
+    const validUntil = now + Number(validDays) * 86400;
+    const dailyCapWei = parseEther(dailyCap);
+    const perTxCapWei = parseEther(perTxCap);
+    const currentNonce = nonce ?? 0n;
+
+    try {
+      // 1. EIP-712 signature matching contract's SCOPE_TYPEHASH
+      const sig = await signTypedDataAsync({
+        domain: {
+          name: "BouclierPermissionVault",
+          version: "1",
+          chainId,
+          verifyingContract: contracts.permissionVault,
+        },
+        types: {
+          PermissionScope: [
+            { name: "agentId", type: "bytes32" },
+            { name: "nonce", type: "uint256" },
+            { name: "dailySpendCapUSD", type: "uint256" },
+            { name: "perTxSpendCapUSD", type: "uint256" },
+            { name: "validFrom", type: "uint48" },
+            { name: "validUntil", type: "uint48" },
+            { name: "allowAnyProtocol", type: "bool" },
+            { name: "allowAnyToken", type: "bool" },
+          ],
+        },
+        primaryType: "PermissionScope",
+        message: {
+          agentId,
+          nonce: currentNonce,
+          dailySpendCapUSD: dailyCapWei,
+          perTxSpendCapUSD: perTxCapWei,
+          validFrom: now,
+          validUntil,
+          allowAnyProtocol,
+          allowAnyToken: true,
+        },
+      });
+
+      // 2. Full scope struct for the contract
+      const scopeData = {
+        agentId,
+        allowedProtocols: [] as readonly `0x${string}`[],
+        allowedSelectors: [] as readonly `0x${string}`[],
+        allowedTokens: [] as readonly `0x${string}`[],
+        dailySpendCapUSD: dailyCapWei,
+        perTxSpendCapUSD: perTxCapWei,
+        validFrom: now,
+        validUntil,
+        allowAnyProtocol,
+        allowAnyToken: true,
+        revoked: false,
+        grantHash: ("0x" + "0".repeat(64)) as `0x${string}`,
+        windowStartHour: Number(windowStart),
+        windowEndHour: Number(windowEnd),
+        windowDaysMask: 127,
+        allowedChainId: BigInt(chainId),
+      };
+
+      // 3. Submit with real signature + explicit gas
+      writeGrant({
+        address: contracts.permissionVault,
+        abi: permissionVaultAbi,
+        functionName: "grantPermission",
+        args: [agentId, scopeData, sig],
+        gas: 500_000n,
+      });
+    } catch (err: any) {
+      toast.error(err?.shortMessage || err?.message || "Signature rejected");
+    } finally {
+      setSigning(false);
+    }
   };
 
   const handleRevoke = () => {
@@ -527,11 +586,11 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
               <RefreshCw size={12} className="mr-1.5" /> Refresh
             </Button>
           </div>
-        ) : grantPending || grantConfirming ? (
+        ) : signing || grantPending || grantConfirming ? (
           <div className="flex flex-col items-center py-10 text-center">
             <div className="w-12 h-12 border-2 border-accent border-t-transparent rounded-full animate-spin mb-4" />
             <p className="text-[11px] font-mono uppercase tracking-widest text-text">
-              {grantPending ? "Awaiting Wallet Signature…" : "Mining On-Chain…"}
+              {signing ? "Sign EIP-712 in Wallet…" : grantPending ? "Awaiting Wallet Signature…" : "Mining On-Chain…"}
             </p>
           </div>
         ) : (
@@ -541,7 +600,9 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
                 <ShieldAlert size={16} className="mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="font-bold text-xs">Transaction Failed</p>
-                  <p className="text-[11px] font-mono mt-1 break-words">{(grantError as any).shortMessage || grantError.message}</p>
+                  <p className="text-[11px] font-mono mt-1 break-words">
+                    {(grantError as any)?.cause?.reason || (grantError as any)?.shortMessage || grantError.message}
+                  </p>
                 </div>
               </div>
             )}
