@@ -8,39 +8,42 @@ const tiers = [
   {
     name: "Open Protocol",
     price: "Free",
-    desc: "Core protocol is permissionless and free to use. Pay only gas costs on Base L2.",
+    desc: "Core protocol is permissionless and free forever. Self-host everything — you pay only Base L2 gas.",
     features: [
-      "Agent registration",
-      "Policy deployment",
+      "Agent registration & identity",
+      "Policy deployment & enforcement",
       "On-chain verification",
-      "Audit trail access",
-      "Base L2 gas costs only",
+      "Audit trail on-chain",
+      "All SDKs & framework adapters",
+      "Community support",
     ],
     accent: false,
   },
   {
-    name: "Sentinel Staker",
-    price: "Stake-Based",
-    desc: "Run a sentinel node by staking tokens. Earn verification rewards for securing the network.",
+    name: "Bouclier Cloud",
+    price: "Usage-Based",
+    desc: "Managed infrastructure so you don't have to run anything. Hosted nodes, indexed API, dashboard, and alerts.",
     features: [
       "Everything in Open Protocol",
-      "Run sentinel nodes",
-      "Earn verification rewards",
-      "Priority policy checks",
-      "Network governance rights",
+      "Managed sentinel nodes",
+      "Indexed query API",
+      "Real-time compliance dashboard",
+      "Monitoring & alert rules",
+      "Email support",
     ],
     accent: true,
   },
   {
     name: "Enterprise",
     price: "Custom",
-    desc: "Dedicated infrastructure, SLA guarantees, and custom policy development for high-volume deployments.",
+    desc: "Dedicated infrastructure, custom SLAs, and compliance report generation for regulated environments.",
     features: [
-      "Everything in Sentinel Staker",
+      "Everything in Bouclier Cloud",
       "Dedicated sentinel nodes",
       "Custom policy development",
-      "Priority support channel",
-      "SLA guarantees",
+      "White-label dashboard",
+      "MiCA & MAS compliance reports",
+      "SLA & priority engineering support",
     ],
     accent: false,
   },
@@ -48,9 +51,10 @@ const tiers = [
 
 const faqs = [
   { q: "How much does it cost to register an agent?", a: "Agent registration requires a single transaction on Base L2. You pay only the gas cost, which is typically under $0.01 on Base." },
-  { q: "Are there recurring fees?", a: "No recurring fees for using the open protocol. You pay gas per transaction. Sentinel staking is voluntary and earns rewards." },
-  { q: "What about the enterprise tier?", a: "Enterprise pricing is custom based on throughput, node requirements, and support needs. Contact us for a tailored quote." },
-  { q: "When will staking and rewards go live?", a: "Staking and sentinel rewards will launch alongside the mainnet deployment. Testnet is available now for node operators to prepare." },
+  { q: "Are there recurring fees?", a: "No recurring fees for using the open protocol. You pay gas per transaction. Bouclier Cloud is usage-based — you pay for what you verify." },
+  { q: "What does Bouclier Cloud include?", a: "Managed sentinel nodes, an indexed query API, a real-time compliance dashboard, and configurable monitoring alerts. No infrastructure to maintain." },
+  { q: "What about the enterprise tier?", a: "Enterprise pricing is custom based on throughput, compliance requirements, and support needs. Includes white-label dashboard, MiCA/MAS report generation, and dedicated engineering support." },
+  { q: "Can I self-host everything?", a: "Yes. The core protocol and all SDKs are open source under the MIT license. You can deploy contracts, run your own sentinel nodes, and build your own dashboard." },
 ];
 
 export default function PricingPage() {
@@ -58,7 +62,7 @@ export default function PricingPage() {
     <MarketingPageTemplate
       title="Pricing"
       subtitle="Cost Structure"
-      description="Bouclier is an open protocol. Core functionality is free — you pay only Base L2 gas costs. Advanced features use a stake-based model."
+      description="Bouclier is an open protocol. Core functionality is free — you pay only Base L2 gas. Bouclier Cloud provides managed infrastructure for teams that want to move fast."
       icon={DollarSign}
     >
       {/* Pricing Tiers */}
