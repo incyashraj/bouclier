@@ -114,3 +114,27 @@ async def create_api_key(
     await db.commit()
 
     return {"key": full_key, "prefix": prefix, "environment": environment}
+
+
+# ── SIWE Authentication ──────────────────────────────────────────
+
+@router.get("/v1/auth/nonce")
+async def get_nonce():
+    """Get a fresh nonce for the SIWE sign-in flow."""
+    from app.siwe_auth import issue_nonce
+    return {"nonce": issue_nonce()}
+
+
+@router.post("/v1/auth/siwe")
+async def siwe_login(body: dict):
+    """Verify a SIWE message + signature and return a JWT session token."""
+    from app.siwe_auth import verify_siwe_message, create_session_token
+
+    message = body.get("message")
+    signature = body.get("signature")
+    if not message or not signature:
+        raise HTTPException(status_code=400, detail={"code": "MISSING_FIELDS", "message": "message and signature required"})
+
+    claims = verify_siwe_message(message, signature)
+    token = create_session_token(claims["address"], claims["chain_id"])
+    return {"token": token, "address": claims["address"], "chain_id": claims["chain_id"]}

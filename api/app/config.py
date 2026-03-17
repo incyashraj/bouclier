@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     # Blockchain
     base_sepolia_rpc_url: str = "https://sepolia.base.org"
     base_mainnet_rpc_url: str = "https://mainnet.base.org"
+    arbitrum_rpc_url: str = "https://arb1.arbitrum.io/rpc"
 
     # Contract addresses (Base Sepolia defaults)
     agent_registry_address: str = "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb"
@@ -34,6 +35,14 @@ class Settings(BaseSettings):
 
     # The Graph
     subgraph_url: str = "https://api.studio.thegraph.com/query/1744498/bouclier-base-sepolia/v0.0.1"
+
+    # IPFS / Pinata
+    pinata_jwt: str = ""
+    pinata_gateway: str = "https://gateway.pinata.cloud/ipfs"
+
+    # Alerts
+    slack_webhook_url: str = ""
+    discord_webhook_url: str = ""
 
     # Rate limiting
     rate_limit_pro: int = 100  # req/min

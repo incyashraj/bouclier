@@ -18,6 +18,16 @@ interface IAggregatorV3 {
             uint256 updatedAt,
             uint80  answeredInRound
         );
+    function getRoundData(uint80 _roundId)
+        external
+        view
+        returns (
+            uint80  roundId,
+            int256  answer,
+            uint256 startedAt,
+            uint256 updatedAt,
+            uint80  answeredInRound
+        );
 }
 
 /// @title  SpendTracker
@@ -55,6 +65,11 @@ contract SpendTracker is ISpendTracker, AccessControl, Pausable {
 
     // Circuit breaker threshold — revert if price deviates > 5% from anchor
     uint256 public constant DEVIATION_BPS = 500; // 5%
+
+    // TWAP fallback: number of rounds to average when latest is stale
+    uint256 public constant TWAP_ROUNDS = 4;
+    // Whether TWAP fallback is enabled (admin can toggle)
+    bool public twapFallbackEnabled = true;
 
     // ── Constructor ───────────────────────────────────────────────
     constructor(address admin) {
@@ -172,27 +187,26 @@ contract SpendTracker is ISpendTracker, AccessControl, Pausable {
         IAggregatorV3 feed = IAggregatorV3(feedAddr);
         // slither-disable-next-line unused-return
         (
-            /* roundId */,
+            uint80 roundId,
             int256 answer,
             /* startedAt */,
             uint256 updatedAt,
             /* answeredInRound */
         ) = feed.latestRoundData();
 
-        require(answer > 0, "SpendTracker: negative or zero oracle price");
-        require(
-            block.timestamp - updatedAt <= MAX_FEED_AGE,
-            "SpendTracker: stale oracle price"
-        );
+        uint8 feedDecimals = feed.decimals();
+        uint256 price18;
 
-        uint8 feedDecimals   = feed.decimals();        // Chainlink uses 8 decimals
-        uint8 tokenDecimals  = _tokenDecimals(token);  // USDC=6, ETH=18, WBTC=8
+        bool stale = (block.timestamp - updatedAt > MAX_FEED_AGE);
 
-        // Normalise to 18 decimals:
-        // price18 = answer * 10^(18 - feedDecimals)
-        // usd18   = amount * price18 / 10^tokenDecimals
-        // answer > 0 already verified above; safe to cast
-        uint256 price18 = uint256(answer) * (10 ** (18 - feedDecimals));
+        if (stale && twapFallbackEnabled) {
+            // TWAP fallback: average the last TWAP_ROUNDS rounds
+            price18 = _getTWAPPrice(feed, roundId, feedDecimals);
+        } else {
+            require(!stale, "SpendTracker: stale oracle price");
+            require(answer > 0, "SpendTracker: negative or zero oracle price");
+            price18 = uint256(answer) * (10 ** (18 - feedDecimals));
+        }
 
         // Circuit breaker: revert if price deviates > DEVIATION_BPS from anchor
         uint256 anchor = _anchorPrices[token];
@@ -204,8 +218,40 @@ contract SpendTracker is ISpendTracker, AccessControl, Pausable {
             );
         }
 
-        uint256 usd18   = (amount * price18) / (10 ** tokenDecimals);
+        uint8 tokenDecimals = _tokenDecimals(token);
+        uint256 usd18 = (amount * price18) / (10 ** tokenDecimals);
         return usd18;
+    }
+
+    /// @dev Compute TWAP by averaging the previous TWAP_ROUNDS Chainlink rounds.
+    ///      Skips rounds with non-positive answers. Reverts if no valid rounds found.
+    function _getTWAPPrice(
+        IAggregatorV3 feed,
+        uint80 latestRoundId,
+        uint8 feedDecimals
+    ) internal view returns (uint256 price18) {
+        uint256 total;
+        uint256 count;
+
+        for (uint256 i = 0; i < TWAP_ROUNDS; ++i) {
+            if (latestRoundId <= i) break;
+            uint80 rid = latestRoundId - uint80(i);
+            // slither-disable-next-line unused-return
+            (, int256 answer,,, ) = feed.getRoundData(rid);
+            if (answer > 0) {
+                total += uint256(answer);
+                count++;
+            }
+        }
+
+        require(count > 0, "SpendTracker: no valid TWAP rounds");
+        uint256 avgAnswer = total / count;
+        price18 = avgAnswer * (10 ** (18 - feedDecimals));
+    }
+
+    /// @notice Toggle TWAP fallback. Admin only.
+    function setTwapFallback(bool enabled) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        twapFallbackEnabled = enabled;
     }
 
     /// @dev Returns known token decimals. Unknown tokens default to 18.

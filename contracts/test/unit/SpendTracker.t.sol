@@ -8,11 +8,13 @@ contract MockAggregatorV3 {
     int256  public latestAnswer;
     uint256 public latestUpdatedAt;
     uint8   public feedDecimals;
+    uint80  public latestRound;
 
     constructor(int256 _answer, uint8 _decimals) {
         latestAnswer    = _answer;
         latestUpdatedAt = block.timestamp;
         feedDecimals    = _decimals;
+        latestRound     = 1;
     }
 
     function decimals() external view returns (uint8) { return feedDecimals; }
@@ -21,11 +23,19 @@ contract MockAggregatorV3 {
         external view
         returns (uint80, int256, uint256, uint256, uint80)
     {
-        return (0, latestAnswer, 0, latestUpdatedAt, 0);
+        return (latestRound, latestAnswer, 0, latestUpdatedAt, latestRound);
+    }
+
+    function getRoundData(uint80 _roundId)
+        external view
+        returns (uint80, int256, uint256, uint256, uint80)
+    {
+        return (_roundId, latestAnswer, 0, latestUpdatedAt, _roundId);
     }
 
     function setAnswer(int256 _answer) external { latestAnswer = _answer; }
     function setUpdatedAt(uint256 _t)  external { latestUpdatedAt = _t; }
+    function setRound(uint80 _r)       external { latestRound = _r; }
 }
 
 /// @title SpendTracker Unit Tests
@@ -122,10 +132,21 @@ contract SpendTrackerTest is BouclierTestBase {
         spendTracker.getUSDValue(WETH_LOCAL, 1 ether);
     }
 
-    function test_getUSDValue_revertsOnStaleOracle() public {
+    function test_getUSDValue_revertsOnStaleOracle_twapDisabled() public {
+        // Disable TWAP so stale feed reverts immediately
+        spendTracker.setTwapFallback(false);
         ethFeed.setUpdatedAt(block.timestamp - 4000); // > MAX_FEED_AGE (3600)
         vm.expectRevert("SpendTracker: stale oracle price");
         spendTracker.getUSDValue(WETH_LOCAL, 1 ether);
+    }
+
+    function test_getUSDValue_fallsBackToTWAP() public {
+        // TWAP is enabled by default. Make the latest round stale — TWAP should kick in
+        ethFeed.setRound(5); // enough rounds for TWAP_ROUNDS=4
+        ethFeed.setUpdatedAt(block.timestamp - 4000); // stale
+        // TWAP uses getRoundData which returns the same price — should still work
+        uint256 usd = spendTracker.getUSDValue(WETH_LOCAL, 1 ether);
+        assertEq(usd, 3000e18);
     }
 
     // ── ring buffer wrap ──────────────────────────────────────────

@@ -1,0 +1,10 @@
+testMode: "assertion"
+testLimit: 10000000
+seqLen: 100
+shrinkLimit: 5000
+contractAddr: "0x00a329c0648769A73afAc7F9381E08FB43dBEA72"
+deployer: "0x00a329c0648769A73afAc7F9381E08FB43dBEA72"
+sender: ["0x10000", "0x20000", "0x30000"]
+balanceAddr: 0xffffffff
+balanceContract: 0xffffffff
+cryticArgs: ["--compile-force-framework", "foundry"]

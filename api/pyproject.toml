@@ -16,6 +16,8 @@ dependencies = [
     "bcrypt>=4.0.0",
     "httpx>=0.28.0",
     "redis[hiredis]>=5.0.0",
+    "reportlab>=4.0.0",
+    "siwe>=4.0.0",
 ]
 
 [project.optional-dependencies]

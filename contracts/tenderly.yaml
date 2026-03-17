@@ -17,3 +17,91 @@ contracts:
   bouclier-audit-logger:
     address: "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735"
     network: 84532
+
+# ── Alert Rules ──────────────────────────────────────────────────
+alerts:
+  # Critical: Agent revoked (emergency or batch)
+  agent-revoked:
+    description: "Agent revocation detected"
+    contract: bouclier-revocation-registry
+    type: event
+    event_name: "AgentRevoked"
+    severity: critical
+    destinations:
+      - slack
+      - email
+
+  # Critical: Emergency revoke via PermissionVault
+  emergency-revoke:
+    description: "Emergency revoke triggered on PermissionVault"
+    contract: bouclier-permission-vault
+    type: event
+    event_name: "EmergencyRevoke"
+    severity: critical
+    destinations:
+      - slack
+      - pagerduty
+
+  # Warning: Spend cap exceeded attempt
+  spend-cap-exceeded:
+    description: "Agent attempted to exceed daily spend cap"
+    contract: bouclier-spend-tracker
+    type: event
+    event_name: "SpendCapExceeded"
+    severity: high
+    destinations:
+      - slack
+
+  # Warning: Permission violation (validateUserOp failure)
+  permission-violation:
+    description: "Permission validation failed"
+    contract: bouclier-permission-vault
+    type: event
+    event_name: "ValidationFailed"
+    severity: high
+    destinations:
+      - slack
+
+  # Info: High-value spend recorded (> $10,000)
+  high-value-spend:
+    description: "High-value spend recorded (>$10k USD)"
+    contract: bouclier-spend-tracker
+    type: event
+    event_name: "SpendRecorded"
+    condition: "value > 10000000000"  # $10k in 6-decimal USD
+    severity: medium
+    destinations:
+      - slack
+
+  # Info: New agent registered
+  agent-registered:
+    description: "New agent registered on-chain"
+    contract: bouclier-agent-registry
+    type: event
+    event_name: "AgentRegistered"
+    severity: low
+    destinations:
+      - slack
+
+  # Critical: Contract paused
+  contract-paused:
+    description: "A Bouclier contract was paused"
+    contract: bouclier-permission-vault
+    type: event
+    event_name: "Paused"
+    severity: critical
+    destinations:
+      - slack
+      - pagerduty
+
+# ── Notification Destinations ────────────────────────────────────
+destinations:
+  slack:
+    type: slack
+    webhook_url: "${TENDERLY_SLACK_WEBHOOK_URL}"
+  email:
+    type: email
+    address: "${TENDERLY_ALERT_EMAIL}"
+  pagerduty:
+    type: pagerduty
+    integration_key: "${PAGERDUTY_INTEGRATION_KEY}"

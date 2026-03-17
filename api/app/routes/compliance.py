@@ -15,7 +15,7 @@ router = APIRouter(prefix="/v1/compliance", tags=["compliance"])
 async def get_compliance_report(
     agent_id: str | None = Query(None, description="Agent DID — omit for all agents"),
     jurisdiction: str = Query("generic", pattern="^(MAS|MiCA|generic)$"),
-    format: str = Query("json", pattern="^(json|csv)$"),
+    format: str = Query("json", pattern="^(json|csv|pdf)$"),
     date_from: datetime = Query(..., alias="from"),
     date_to: datetime = Query(..., alias="to"),
     org: Organization = Depends(get_current_org),
@@ -37,6 +37,13 @@ async def get_compliance_report(
             content=report,
             media_type="text/csv",
             headers={"Content-Disposition": f"attachment; filename=bouclier-{jurisdiction}-report.csv"},
+        )
+
+    if format == "pdf":
+        return Response(
+            content=report,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename=bouclier-{jurisdiction}-report.pdf"},
         )
 
     return report
