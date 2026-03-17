@@ -63,12 +63,14 @@ export default function GrantPage() {
     if (!contracts || !chainId || !address) return;
 
     const currentNonce = nonce ?? 0n;
-    
+
     // Ensure agentId is strictly 32 bytes (66 chars including 0x)
     const finalAgentId = (agentId.startsWith("0x") ? agentId : "0x" + agentId).padEnd(66, "0") as `0x${string}`;
 
     const validFromTs = ~~(Date.now() / 1000);
     const validUntilTs = validFromTs + Number(validDays) * 86400;
+    const dailyCapWei = parseEther(dailyCap);
+    const perTxCapWei = parseEther(perTxCap);
 
     try {
       // 1. Sign EIP-712 typed data matching the contract's SCOPE_TYPEHASH
@@ -95,8 +97,8 @@ export default function GrantPage() {
         message: {
           agentId: finalAgentId,
           nonce: currentNonce,
-          dailySpendCapUSD: parseEther(dailyCap),
-          perTxSpendCapUSD: parseEther(perTxCap),
+          dailySpendCapUSD: dailyCapWei,
+          perTxSpendCapUSD: perTxCapWei,
           validFrom: validFromTs,
           validUntil: validUntilTs,
           allowAnyProtocol: allowAnyProtocol,
@@ -105,35 +107,35 @@ export default function GrantPage() {
       });
 
       setSignature(sig);
+      setStep(3);
 
-      // 2. Build the full scope struct for the contract call
+      // 2. Build the full scope struct matching the ABI tuple
       const scopeData = {
         agentId: finalAgentId,
-        allowedProtocols: [] as `0x${string}`[],
-        allowedSelectors: [] as `0x${string}`[],
-        allowedTokens: [] as `0x${string}`[],
-        dailySpendCapUSD: parseEther(dailyCap),
-        perTxSpendCapUSD: parseEther(perTxCap),
+        allowedProtocols: [] as readonly `0x${string}`[],
+        allowedSelectors: [] as readonly `0x${string}`[],
+        allowedTokens: [] as readonly `0x${string}`[],
+        dailySpendCapUSD: dailyCapWei,
+        perTxSpendCapUSD: perTxCapWei,
         validFrom: validFromTs,
         validUntil: validUntilTs,
         allowAnyProtocol: allowAnyProtocol,
         allowAnyToken: true,
         revoked: false,
-        grantHash: "0x" + "0".repeat(64) as `0x${string}`,
+        grantHash: ("0x" + "0".repeat(64)) as `0x${string}`,
         windowStartHour: Number(windowStart),
         windowEndHour: Number(windowEnd),
         windowDaysMask: 127,
         allowedChainId: BigInt(chainId),
       };
 
-      // 3. Submit on-chain with the real signature
-      setStep(3);
-
+      // 3. Submit on-chain with explicit gas to avoid estimation masking reverts
       writeContract({
         address: contracts.permissionVault,
         abi: permissionVaultAbi,
         functionName: "grantPermission",
-        args: [finalAgentId, scopeData as any, sig],
+        args: [finalAgentId, scopeData, sig],
+        gas: 500_000n,
       });
 
     } catch (err: any) {
@@ -402,8 +404,15 @@ export default function GrantPage() {
                    <div className="flex flex-col items-center text-red-500">
                      <ShieldAlert size={32} className="mb-4" />
                      <p className="font-bold text-sm">Transaction Failed</p>
-                     <p className="text-xs mt-2 font-mono break-words max-w-sm">{(writeError as any).shortMessage || writeError.message}</p>
-                     <Button variant="outline" onClick={() => setStep(2)} className="mt-6">Try Again</Button>
+                     <p className="text-xs mt-2 font-mono break-words max-w-sm">
+                       {(writeError as any)?.cause?.reason
+                         || (writeError as any)?.shortMessage
+                         || writeError.message}
+                     </p>
+                     <div className="flex gap-3 mt-6">
+                       <Button variant="outline" onClick={() => setStep(1)} className="font-mono uppercase tracking-widest text-[11px]">Start Over</Button>
+                       <Button variant="outline" onClick={() => setStep(2)} className="font-mono uppercase tracking-widest text-[11px]">Edit Limits</Button>
+                     </div>
                    </div>
                  ) : null}
                </div>

@@ -1,31 +1,33 @@
 "use client";
 
+import { useState, type ReactNode } from "react";
 import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { baseSepolia, base, mainnet } from "viem/chains";
-import { http } from "wagmi";
-import { WagmiProvider } from "wagmi";
+import { http, WagmiProvider } from "wagmi";
 
-const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL;
+function makeConfig() {
+  return getDefaultConfig({
+    appName: "Bouclier",
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? "demo",
+    chains: [mainnet, base, baseSepolia],
+    transports: {
+      [mainnet.id]: http(),
+      [base.id]: http(),
+      [baseSepolia.id]: http(process.env.NEXT_PUBLIC_RPC_URL || undefined),
+    },
+    ssr: true,
+  });
+}
 
-const wagmiConfig = getDefaultConfig({
-  appName: "Bouclier",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? "demo",
-  chains: [mainnet, base, baseSepolia],
-  transports: {
-    [mainnet.id]: http(),
-    [base.id]: http(),
-    [baseSepolia.id]: http(rpcUrl || undefined),
-  },
-  ssr: true,
-});
+export function Providers({ children }: { children: ReactNode }) {
+  // Lazy-init inside the component so WalletConnect never touches indexedDB during SSR
+  const [config] = useState(() => makeConfig());
+  const [queryClient] = useState(() => new QueryClient());
 
-const queryClient = new QueryClient();
-
-export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>{children}</RainbowKitProvider>
       </QueryClientProvider>
