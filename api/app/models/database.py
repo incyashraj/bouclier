@@ -23,6 +23,7 @@ class Organization(Base):
     api_keys: Mapped[list["ApiKey"]] = relationship(back_populates="organization")
     agents: Mapped[list["Agent"]] = relationship(back_populates="organization")
     webhooks: Mapped[list["Webhook"]] = relationship(back_populates="organization")
+    users: Mapped[list["User"]] = relationship(back_populates="organization")
 
 
 class ApiKey(Base):
@@ -103,3 +104,42 @@ class Webhook(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     organization: Mapped["Organization"] = relationship(back_populates="webhooks")
+
+
+class User(Base):
+    """Platform user — linked to an organization via wallet address."""
+    __tablename__ = "users"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    organization_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
+    wallet_address: Mapped[str] = mapped_column(String(42), nullable=False, unique=True)
+    role: Mapped[str] = mapped_column(String(20), default="viewer")  # admin, operator, viewer
+    display_name: Mapped[str | None] = mapped_column(String(255))
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    last_login_at: Mapped[datetime | None] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    organization: Mapped["Organization"] = relationship(back_populates="users")
+
+    __table_args__ = (
+        Index("ix_users_org_role", "organization_id", "role"),
+        Index("ix_users_wallet", "wallet_address"),
+    )
+
+
+class Invite(Base):
+    """Pending invitation to join an organization."""
+    __tablename__ = "invites"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    organization_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
+    invited_wallet: Mapped[str] = mapped_column(String(42), nullable=False)
+    role: Mapped[str] = mapped_column(String(20), default="viewer")
+    invited_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    accepted: Mapped[bool] = mapped_column(Boolean, default=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    __table_args__ = (
+        Index("ix_invites_wallet", "invited_wallet"),
+    )

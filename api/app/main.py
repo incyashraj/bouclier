@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.middleware import RateLimitMiddleware, RequestIdMiddleware
-from app.routes import agents, operations, platform, compliance
+from app.routes import agents, operations, platform, compliance, billing
 
 # Structured logging
 logging.basicConfig(
@@ -40,3 +40,4 @@ app.include_router(agents.router)
 app.include_router(operations.router)
 app.include_router(compliance.router)
 app.include_router(platform.router)
+app.include_router(billing.router)

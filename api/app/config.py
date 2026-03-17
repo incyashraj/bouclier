@@ -44,6 +44,12 @@ class Settings(BaseSettings):
     slack_webhook_url: str = ""
     discord_webhook_url: str = ""
 
+    # Stripe
+    stripe_secret_key: str = ""
+    stripe_webhook_secret: str = ""
+    stripe_price_growth: str = ""      # Stripe Price ID for Growth tier
+    stripe_price_enterprise: str = ""  # Stripe Price ID for Enterprise tier
+
     # Rate limiting
     rate_limit_pro: int = 100  # req/min
     rate_limit_enterprise: int = 1000  # req/min
