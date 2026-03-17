@@ -43,7 +43,7 @@ export default function GrantPage() {
   const agentOptions = (ownedAgentIds as `0x${string}`[] | undefined) ?? [];
 
   // Read nonces
-  const { data: nonce } = useReadContract({
+  const { data: nonce, refetch: refetchNonce } = useReadContract({
     address: agentId && contracts ? contracts.permissionVault : undefined,
     abi: permissionVaultAbi,
     functionName: "grantNonces",
@@ -52,17 +52,20 @@ export default function GrantPage() {
   });
 
   const { signTypedDataAsync } = useSignTypedData();
-  const { writeContract, data: hash, isPending, error: writeError } = useWriteContract();
+  const { writeContractAsync, data: hash, isPending, error: writeError, reset: resetWrite } = useWriteContract();
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+  const { isLoading: isConfirming, isSuccess: isConfirmed, isError: isReverted, error: receiptError } = useWaitForTransactionReceipt({
     hash,
   });
 
   const handleSignRow = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!contracts || !chainId || !address) return;
+    resetWrite();
 
-    const currentNonce = nonce ?? 0n;
+    // Refetch nonce to avoid stale-nonce signature mismatch
+    const { data: freshNonce } = await refetchNonce();
+    const currentNonce = freshNonce ?? nonce ?? 0n;
 
     // Ensure agentId is strictly 32 bytes (66 chars including 0x)
     const finalAgentId = (agentId.startsWith("0x") ? agentId : "0x" + agentId).padEnd(66, "0") as `0x${string}`;
@@ -129,18 +132,21 @@ export default function GrantPage() {
         allowedChainId: BigInt(chainId),
       };
 
-      // 3. Submit on-chain with explicit gas to avoid estimation masking reverts
-      writeContract({
+      // 3. Submit on-chain (let gas estimation catch reverts)
+      await writeContractAsync({
         address: contracts.permissionVault,
         abi: permissionVaultAbi,
         functionName: "grantPermission",
         args: [finalAgentId, scopeData, sig],
-        gas: 500_000n,
       });
 
     } catch (err: any) {
       console.error("Sign/Grant Error:", err);
-      toast.error(err?.shortMessage || err?.message || "Signature rejected");
+      const reason = (err as any)?.cause?.reason
+        || (err as any)?.shortMessage
+        || err?.message
+        || "Transaction failed";
+      toast.error(reason);
     }
   };
 
@@ -400,14 +406,17 @@ export default function GrantPage() {
                        <Button variant="outline" className="mt-8 font-mono uppercase tracking-widest text-[11px]">View Dashboard</Button>
                      </Link>
                    </div>
-                 ) : writeError ? (
+                 ) : (writeError || isReverted) ? (
                    <div className="flex flex-col items-center text-red-500">
                      <ShieldAlert size={32} className="mb-4" />
                      <p className="font-bold text-sm">Transaction Failed</p>
                      <p className="text-xs mt-2 font-mono break-words max-w-sm">
                        {(writeError as any)?.cause?.reason
                          || (writeError as any)?.shortMessage
-                         || writeError.message}
+                         || (receiptError as any)?.shortMessage
+                         || writeError?.message
+                         || receiptError?.message
+                         || "Transaction reverted on-chain"}
                      </p>
                      <div className="flex gap-3 mt-6">
                        <Button variant="outline" onClick={() => setStep(1)} className="font-mono uppercase tracking-widest text-[11px]">Start Over</Button>

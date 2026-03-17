@@ -408,7 +408,7 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
   });
 
   // Read on-chain nonce for EIP-712 replay protection
-  const { data: nonce } = useReadContract({
+  const { data: nonce, refetch: refetchNonce } = useReadContract({
     address: contracts.permissionVault, abi: permissionVaultAbi,
     functionName: "grantNonces", args: [agentId],
   });
@@ -422,8 +422,8 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
   const [signing, setSigning] = useState(false);
 
   const { signTypedDataAsync } = useSignTypedData();
-  const { writeContract: writeGrant, data: grantHash, isPending: grantPending, error: grantError } = useWriteContract();
-  const { isLoading: grantConfirming, isSuccess: grantConfirmed } = useWaitForTransactionReceipt({ hash: grantHash });
+  const { writeContractAsync: writeGrantAsync, data: grantHash, isPending: grantPending, error: grantError, reset: resetGrant } = useWriteContract();
+  const { isLoading: grantConfirming, isSuccess: grantConfirmed, isError: grantReverted, error: grantReceiptError } = useWaitForTransactionReceipt({ hash: grantHash });
 
   const { writeContract: writeRevoke, data: revokeHash, isPending: revokePending, error: revokeError } = useWriteContract();
   const { isLoading: revokeConfirming, isSuccess: revokeConfirmed } = useWaitForTransactionReceipt({ hash: revokeHash });
@@ -432,13 +432,17 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
 
   const handleGrant = async () => {
     if (!address) return;
+    resetGrant();           // clear previous error/hash state
     setSigning(true);
+
+    // Refetch nonce to avoid stale-nonce signature mismatch
+    const { data: freshNonce } = await refetchNonce();
 
     const now = ~~(Date.now() / 1000);
     const validUntil = now + Number(validDays) * 86400;
     const dailyCapWei = parseEther(dailyCap);
     const perTxCapWei = parseEther(perTxCap);
-    const currentNonce = nonce ?? 0n;
+    const currentNonce = freshNonce ?? nonce ?? 0n;
 
     try {
       // 1. EIP-712 signature matching contract's SCOPE_TYPEHASH
@@ -494,16 +498,19 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
         allowedChainId: BigInt(chainId),
       };
 
-      // 3. Submit with real signature + explicit gas
-      writeGrant({
+      // 3. Submit with real signature (let gas estimation catch reverts)
+      await writeGrantAsync({
         address: contracts.permissionVault,
         abi: permissionVaultAbi,
         functionName: "grantPermission",
         args: [agentId, scopeData, sig],
-        gas: 500_000n,
       });
     } catch (err: any) {
-      toast.error(err?.shortMessage || err?.message || "Signature rejected");
+      const reason = (err as any)?.cause?.reason
+        || (err as any)?.shortMessage
+        || err?.message
+        || "Transaction failed";
+      toast.error(reason);
     } finally {
       setSigning(false);
     }
@@ -595,13 +602,18 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
           </div>
         ) : (
           <div className="p-5 space-y-5">
-            {grantError && (
+            {(grantError || grantReverted) && (
               <div className="flex items-start gap-2 p-3 border border-red-500/20 bg-red-500/5 rounded-sm text-red-600">
                 <ShieldAlert size={16} className="mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="font-bold text-xs">Transaction Failed</p>
                   <p className="text-[11px] font-mono mt-1 break-words">
-                    {(grantError as any)?.cause?.reason || (grantError as any)?.shortMessage || grantError.message}
+                    {(grantError as any)?.cause?.reason
+                      || (grantError as any)?.shortMessage
+                      || (grantReceiptError as any)?.shortMessage
+                      || grantError?.message
+                      || grantReceiptError?.message
+                      || "Transaction reverted on-chain"}
                   </p>
                 </div>
               </div>
