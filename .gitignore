@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Investor / internal docs (keep private)
+business/
+
 # Foundry
 contracts/out/
 contracts/cache/
