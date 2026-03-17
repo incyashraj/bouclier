@@ -6,7 +6,7 @@ sidebar_position: 5
 
 `AuditLogger.sol` is the append-only on-chain audit trail. Every action an agent takes is hashed and emitted as an event, with optional IPFS CID anchoring for full off-chain data.
 
-**Address (Base Sepolia):** `0x42FDFC97CC5937E5c654dFE9494AA278A17D2735`
+**Address (Base Sepolia):** `0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE`
 
 ---
 

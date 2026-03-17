@@ -6,7 +6,7 @@ sidebar_position: 6
 
 `RevocationRegistry.sol` is the kill switch. It allows authorised parties to instantly revoke an agent, with a 24-hour timelock on reinstatement (bypassable by `GUARDIAN_ROLE` for emergencies).
 
-**Address (Base Sepolia):** `0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa`
+**Address (Base Sepolia):** `0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270`
 
 ---
 

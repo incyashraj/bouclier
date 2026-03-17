@@ -27,11 +27,11 @@ class Settings(BaseSettings):
     arbitrum_rpc_url: str = "https://arb1.arbitrum.io/rpc"
 
     # Contract addresses (Base Sepolia defaults)
-    agent_registry_address: str = "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb"
-    permission_vault_address: str = "0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7"
-    spend_tracker_address: str = "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1"
-    revocation_registry_address: str = "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa"
-    audit_logger_address: str = "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735"
+    agent_registry_address: str = "0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB"
+    permission_vault_address: str = "0xe0b283A4Dff684E5D700E53900e7B27279f7999F"
+    spend_tracker_address: str = "0x930Eb18B9962c30b388f900ba9AE62386191cD48"
+    revocation_registry_address: str = "0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270"
+    audit_logger_address: str = "0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE"
 
     # The Graph
     subgraph_url: str = "https://api.studio.thegraph.com/query/1744498/bouclier-base-sepolia/v0.0.1"

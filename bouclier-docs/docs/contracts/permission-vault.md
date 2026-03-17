@@ -6,7 +6,7 @@ sidebar_position: 3
 
 `PermissionVault.sol` is the enforcement engine. It implements ERC-7579 `IValidator` and executes a 15-step validation on every agent action.
 
-**Address (Base Sepolia):** `0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7`
+**Address (Base Sepolia):** `0xe0b283A4Dff684E5D700E53900e7B27279f7999F`
 
 ---
 

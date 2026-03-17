@@ -244,9 +244,9 @@ Implementations MAY omit the spend cap enforcement (setting `perTxSpendCapUSD` a
 
 The reference implementation is the Bouclier Protocol, deployed on Base Sepolia:
 
-- `PermissionVault` (IAgentPermissionValidator): `0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7`
+- `PermissionVault` (IAgentPermissionValidator): `0xe0b283A4Dff684E5D700E53900e7B27279f7999F`
 - Source code: https://github.com/bouclier-protocol/bouclier
-- Basescan: https://sepolia.basescan.org/address/0xff3107529d7815ea6faaba2b3efc257538d0fbb7
+- Basescan: https://sepolia.basescan.org/address/0xe0b283a4dff684e5d700e53900e7b27279f7999f
 
 All 5 Bouclier contracts are source-verified. The implementation passes 76/76 unit tests and 7/7 fork integration tests on Base Sepolia.
 

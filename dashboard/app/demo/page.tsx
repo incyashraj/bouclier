@@ -58,7 +58,7 @@ export default function DemoPage() {
 export PRIVATE_KEY=0x_YOUR_PRIVATE_KEY_HERE
 
 # Register an AI agent on Base Sepolia
-cast send 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
+cast send 0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB \\
   "register(address,string,bytes32,string)" \\
   0x1111000000000000000000000000000000000001 \\
   "gpt-4-turbo" \\
@@ -68,7 +68,7 @@ cast send 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
   --private-key $PRIVATE_KEY
 
 # Get your agent IDs (owned by your wallet)
-cast call 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
+cast call 0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB \\
   "getAgentsByOwner(address)(bytes32[])" YOUR_WALLET_ADDRESS \\
   --rpc-url https://sepolia.base.org`}</Pre>
           <p className="text-xs text-text-muted mt-2">
@@ -131,11 +131,11 @@ cast call 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
         <Step n={6} title="Show the Smart Contracts (Basescan)">
           <p>Open Basescan links to show the verified source code:</p>
           <ul className="list-disc list-inside ml-4 space-y-1 font-mono text-xs">
-            <li>AgentRegistry: <Code>0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb</Code></li>
-            <li>PermissionVault: <Code>0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7</Code></li>
-            <li>SpendTracker: <Code>0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1</Code></li>
-            <li>RevocationRegistry: <Code>0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa</Code></li>
-            <li>AuditLogger: <Code>0x42FDFC97CC5937E5c654dFE9494AA278A17D2735</Code></li>
+            <li>AgentRegistry: <Code>0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB</Code></li>
+            <li>PermissionVault: <Code>0xe0b283A4Dff684E5D700E53900e7B27279f7999F</Code></li>
+            <li>SpendTracker: <Code>0x930Eb18B9962c30b388f900ba9AE62386191cD48</Code></li>
+            <li>RevocationRegistry: <Code>0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270</Code></li>
+            <li>AuditLogger: <Code>0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE</Code></li>
           </ul>
           <p className="text-accent font-semibold mt-2">Talking Point: &quot;All contracts verified on-chain, open-source MIT license. 140+ tests, formal verification with Certora Prover — zero violations.&quot;</p>
         </Step>
@@ -161,7 +161,7 @@ cast call 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
             Run the complete flow in terminal if you want to verify contracts work before recording:
           </p>
           <Pre>{`# 1. Register agent
-cast send 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
+cast send 0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB \\
   "register(address,string,bytes32,string)" \\
   0x4444000000000000000000000000000000000004 \\
   "gpt-4" \\
@@ -170,7 +170,7 @@ cast send 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
   --rpc-url https://sepolia.base.org --private-key $PRIVATE_KEY
 
 # 2. Check registration
-cast call 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \\
+cast call 0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB \\
   "getAgentsByOwner(address)(bytes32[])" YOUR_WALLET \\
   --rpc-url https://sepolia.base.org
 

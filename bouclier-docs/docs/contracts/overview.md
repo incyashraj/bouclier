@@ -10,11 +10,11 @@ Bouclier is composed of 5 smart contracts deployed on Base Sepolia (chain 84532)
 
 | Contract | Address | Basescan |
 |---|---|---|
-| AgentRegistry | `0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb` | [View ↗](https://sepolia.basescan.org/address/0xc5288f059a1ecdb5e8957fc5c17e86754b7850fb) |
-| PermissionVault | `0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7` | [View ↗](https://sepolia.basescan.org/address/0xff3107529d7815ea6faaba2b3efc257538d0fbb7) |
-| RevocationRegistry | `0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa` | [View ↗](https://sepolia.basescan.org/address/0xcba8c42e7e69db1746b0dce4bf6cd58d52c8e0aa) |
-| SpendTracker | `0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1` | [View ↗](https://sepolia.basescan.org/address/0xa0bb860ae111dbd0c174e7c8fa17495fce9534e1) |
-| AuditLogger | `0x42FDFC97CC5937E5c654dFE9494AA278A17D2735` | [View ↗](https://sepolia.basescan.org/address/0x42fdfc97cc5937e5c654dfe9494aa278a17d2735) |
+| AgentRegistry | `0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB` | [View ↗](https://sepolia.basescan.org/address/0x4b23841a1cd67b1489d6d84d2dce666ddef4ccdb) |
+| PermissionVault | `0xe0b283A4Dff684E5D700E53900e7B27279f7999F` | [View ↗](https://sepolia.basescan.org/address/0xe0b283a4dff684e5d700e53900e7b27279f7999f) |
+| RevocationRegistry | `0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270` | [View ↗](https://sepolia.basescan.org/address/0x759833b7eea1df45ad2b2f22b56bee6cc5227270) |
+| SpendTracker | `0x930Eb18B9962c30b388f900ba9AE62386191cD48` | [View ↗](https://sepolia.basescan.org/address/0x930eb18b9962c30b388f900ba9ae62386191cd48) |
+| AuditLogger | `0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE` | [View ↗](https://sepolia.basescan.org/address/0x8e30a7ec6ba7c767535b0e178e002d354f7335ce) |
 
 All contracts are **source-verified** on Basescan (Solidity 0.8.24, optimizer 200 runs).
 

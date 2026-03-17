@@ -19,7 +19,7 @@
 export PRIVATE_KEY=0x_YOUR_PRIVATE_KEY_HERE
 
 # Register agent — use a unique wallet address per agent
-cast send 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \
+cast send 0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB \
   "register(address,string,bytes32,string)" \
   0x1111000000000000000000000000000000000001 \
   "gpt-4-turbo" \
@@ -39,7 +39,7 @@ cast keccak "did:bouclier:demo-agent-001"
 ### 3. Verify Registration
 
 ```bash
-cast call 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \
+cast call 0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB \
   "resolve(bytes32)" YOUR_AGENT_ID \
   --rpc-url https://sepolia.base.org
 ```
@@ -111,8 +111,8 @@ cast call 0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb \
 ### Scene 7: Verified Contracts on Basescan (30s)
 
 Open in browser tabs:
-- AgentRegistry: `https://sepolia.basescan.org/address/0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb#code`
-- PermissionVault: `https://sepolia.basescan.org/address/0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7#code`
+- AgentRegistry: `https://sepolia.basescan.org/address/0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB#code`
+- PermissionVault: `https://sepolia.basescan.org/address/0xe0b283A4Dff684E5D700E53900e7B27279f7999F#code`
 
 > **Say**: "All contracts verified and open-source. 140+ tests, formal verification with Certora Prover — zero violations found."
 
@@ -135,11 +135,11 @@ Open in browser tabs:
 
 | Contract | Address |
 |---|---|
-| AgentRegistry | `0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb` |
-| PermissionVault | `0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7` |
-| SpendTracker | `0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1` |
-| RevocationRegistry | `0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa` |
-| AuditLogger | `0x42FDFC97CC5937E5c654dFE9494AA278A17D2735` |
+| AgentRegistry | `0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB` |
+| PermissionVault | `0xe0b283A4Dff684E5D700E53900e7B27279f7999F` |
+| SpendTracker | `0x930Eb18B9962c30b388f900ba9AE62386191cD48` |
+| RevocationRegistry | `0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270` |
+| AuditLogger | `0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE` |
 
 ---
 

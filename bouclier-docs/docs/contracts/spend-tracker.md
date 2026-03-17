@@ -6,7 +6,7 @@ sidebar_position: 4
 
 `SpendTracker.sol` tracks USD-denominated spending per agent using a sliding-window ring buffer and Chainlink price feeds.
 
-**Address (Base Sepolia):** `0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1`
+**Address (Base Sepolia):** `0x930Eb18B9962c30b388f900ba9AE62386191cD48`
 
 ---
 

@@ -45,11 +45,11 @@ function InfoBox({ type = "info", children }: { type?: "info" | "warning" | "tip
 }
 
 const CONTRACT_ADDRESSES = {
-  AgentRegistry: "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb",
-  PermissionVault: "0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7",
-  SpendTracker: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
-  RevocationRegistry: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa",
-  AuditLogger: "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735",
+  AgentRegistry: "0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB",
+  PermissionVault: "0xe0b283A4Dff684E5D700E53900e7B27279f7999F",
+  SpendTracker: "0x930Eb18B9962c30b388f900ba9AE62386191cD48",
+  RevocationRegistry: "0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270",
+  AuditLogger: "0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE",
 };
 
 export default function DocsPage() {
@@ -134,11 +134,11 @@ const publicClient = createPublicClient({
 const bouclier = new BouclierClient({
   publicClient,
   addresses: {
-    agentRegistry:      "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb",
-    permissionVault:    "0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7",
-    spendTracker:       "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
-    revocationRegistry: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa",
-    auditLogger:        "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735",
+    agentRegistry:      "0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB",
+    permissionVault:    "0xe0b283A4Dff684E5D700E53900e7B27279f7999F",
+    spendTracker:       "0x930Eb18B9962c30b388f900ba9AE62386191cD48",
+    revocationRegistry: "0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270",
+    auditLogger:        "0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE",
   },
 });
 
@@ -301,11 +301,11 @@ const publicClient = createPublicClient({
 const bouclier = new BouclierClient({
   publicClient,
   addresses: {
-    agentRegistry:      "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb",
-    permissionVault:    "0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7",
-    spendTracker:       "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
-    revocationRegistry: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa",
-    auditLogger:        "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735",
+    agentRegistry:      "0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB",
+    permissionVault:    "0xe0b283A4Dff684E5D700E53900e7B27279f7999F",
+    spendTracker:       "0x930Eb18B9962c30b388f900ba9AE62386191cD48",
+    revocationRegistry: "0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270",
+    auditLogger:        "0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE",
   },
 });
 
@@ -474,7 +474,7 @@ const signature = await bouclier.buildScopeSignature(params, account);
 // Check if a proposed spend would exceed the cap
 // Returns true if (rollingSpend + proposedUSD) <= capUSD
 const withinCap = await publicClient.readContract({
-  address: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+  address: "0x930Eb18B9962c30b388f900ba9AE62386191cD48",
   abi: spendTrackerAbi,
   functionName: "checkSpendCap",
   args: [agentId, proposedUSD, capUSD],
@@ -482,7 +482,7 @@ const withinCap = await publicClient.readContract({
 
 // Get rolling spend for last 24 hours (86400 seconds)
 const dailySpend = await publicClient.readContract({
-  address: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+  address: "0x930Eb18B9962c30b388f900ba9AE62386191cD48",
   abi: spendTrackerAbi,
   functionName: "getRollingSpend",
   args: [agentId, 86400n],
@@ -490,7 +490,7 @@ const dailySpend = await publicClient.readContract({
 
 // Get USD value of a token amount
 const usdValue = await publicClient.readContract({
-  address: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+  address: "0x930Eb18B9962c30b388f900ba9AE62386191cD48",
   abi: spendTrackerAbi,
   functionName: "getUSDValue",
   args: [tokenAddress, amount],
@@ -524,7 +524,7 @@ const revoked = await bouclier.isRevoked(agentId);
 
 // Direct contract read -- more detail
 const record = await publicClient.readContract({
-  address: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa",
+  address: "0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270",
   abi: revocationRegistryAbi,
   functionName: "getRevocationRecord",
   args: [agentId],

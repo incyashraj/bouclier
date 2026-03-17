@@ -6,7 +6,7 @@ sidebar_position: 2
 
 `AgentRegistry.sol` is the identity layer. Every AI agent gets a W3C DID and a unique `agentId`.
 
-**Address (Base Sepolia):** `0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb`
+**Address (Base Sepolia):** `0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB`
 
 ---
 

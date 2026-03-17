@@ -28,11 +28,11 @@
 
 | Contract | Address (Base Sepolia) | Type |
 |---|---|---|
-| PermissionVault | `0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7` | Smart Contract |
-| SpendTracker | `0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1` | Smart Contract |
-| RevocationRegistry | `0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa` | Smart Contract |
-| AgentRegistry | `0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb` | Smart Contract |
-| AuditLogger | `0x42FDFC97CC5937E5c654dFE9494AA278A17D2735` | Smart Contract |
+| PermissionVault | `0xe0b283A4Dff684E5D700E53900e7B27279f7999F` | Smart Contract |
+| SpendTracker | `0x930Eb18B9962c30b388f900ba9AE62386191cD48` | Smart Contract |
+| RevocationRegistry | `0x759833B7eEA1Df45ad2b2f22b56bee6CC5227270` | Smart Contract |
+| AgentRegistry | `0x4b23841a1CD67B1489d6d84d2dCe666ddeF4CcDB` | Smart Contract |
+| AuditLogger | `0x8E30A7eC6Ba7c767535b0e178e002d354F7335cE` | Smart Contract |
 
 ---
 
