@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ShieldCheck, Crosshair, Code, Activity, Database, Key, Github } from "lucide-react";
+import { ShieldCheck, Crosshair, Code, Activity, Database, Key, Github, Check, X, Minus } from "lucide-react";
 import { MarketingNav } from "@/components/layout/MarketingNav";
 
 const GridCross = ({ className = "" }: { className?: string }) => (
@@ -237,6 +237,85 @@ export default function Home() {
                   </div>
                   <p className="font-mono text-[11px] text-text-muted mt-3">Network transactions per second capacity</p>
                 </div>
+              </div>
+            </div>
+
+            <GridCross className="bottom-0 left-0" />
+            <GridCross className="bottom-0 right-0" />
+          </div>
+        </motion.div>
+
+        {/* Bouclier vs Alternatives */}
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="w-full border-b border-border bg-background"
+        >
+          <div className="max-w-[1400px] w-full mx-auto border-x border-border relative">
+            <GridCross className="top-0 left-0" />
+            <GridCross className="top-0 right-0" />
+
+            <div className="px-4 sm:px-8 lg:px-12 py-16 sm:py-24">
+              <div className="flex flex-col items-center mb-14 sm:mb-20">
+                <ShieldCheck size={28} className="text-text/20 mb-4" />
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-text text-center">
+                  Why Bouclier?
+                </h2>
+                <p className="text-text-muted text-sm sm:text-base mt-4 max-w-2xl text-center">
+                  Purpose-built for agent permission management — not retrofitted from multisig tooling or locked behind a custodian.
+                </p>
+              </div>
+
+              <div className="overflow-x-auto -mx-2 px-2">
+                <table className="w-full text-xs sm:text-sm border border-border rounded-lg overflow-hidden">
+                  <thead>
+                    <tr className="bg-[#0f0f10] text-white text-left">
+                      <th className="p-3 sm:p-4 font-mono font-semibold uppercase tracking-wider text-[10px] sm:text-xs border-b border-[#2a2a2a] w-[18%]">Capability</th>
+                      <th className="p-3 sm:p-4 font-mono font-semibold uppercase tracking-wider text-[10px] sm:text-xs border-b border-[#2a2a2a] text-accent w-[28%]">Bouclier</th>
+                      <th className="p-3 sm:p-4 font-mono font-semibold uppercase tracking-wider text-[10px] sm:text-xs border-b border-[#2a2a2a] w-[27%]">Safe Guards</th>
+                      <th className="p-3 sm:p-4 font-mono font-semibold uppercase tracking-wider text-[10px] sm:text-xs border-b border-[#2a2a2a] w-[27%]">Custodial MPC</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { cap: "Agent Identity", b: "On-chain DID per agent with hierarchy", sg: "No — guards are per-Safe, not per-agent", c: "Off-chain API keys", s: [2, 0, 1] },
+                      { cap: "Permission Scopes", b: "EIP-712 signed, on-chain enforced scopes", sg: "Transaction-level checks only", c: "Proprietary policy engine, off-chain", s: [2, 1, 1] },
+                      { cap: "Spend Limits", b: "Rolling-window USD limits with Chainlink + TWAP", sg: "ETH-only or no native support", c: "USD limits but custodial", s: [2, 0, 1] },
+                      { cap: "Revocation", b: "Instant emergency + 24h timelock, on-chain", sg: "Remove guard via admin tx", c: "Centralized API call", s: [2, 1, 1] },
+                      { cap: "Audit Trail", b: "Every action on-chain + IPFS anchoring", sg: "Transaction events only", c: "Centralized logs, not verifiable", s: [2, 0, 0] },
+                      { cap: "Modular Accounts", b: "ERC-7579 validator — works with any account", sg: "Safe-only, not portable", c: "Vendor lock-in", s: [2, 1, 0] },
+                      { cap: "Open Source", b: "MIT license, fully verifiable", sg: "Safe-coupled, partially open", c: "Proprietary, closed source", s: [2, 1, 0] },
+                      { cap: "Agent Frameworks", b: "LangChain, AgentKit, ELIZA + TS/Python SDKs", sg: "No agent integrations", c: "REST APIs only", s: [2, 0, 1] },
+                    ].map((row, i) => (
+                      <tr key={row.cap} className={`border-b border-border ${i % 2 === 0 ? "bg-background" : "bg-[#FAFAFA]"}`}>
+                        <td className="p-3 sm:p-4 font-semibold text-text whitespace-nowrap">{row.cap}</td>
+                        <td className="p-3 sm:p-4 text-text">
+                          <span className="inline-flex items-start gap-2"><Check size={14} className="text-emerald-500 mt-0.5 shrink-0" />{row.b}</span>
+                        </td>
+                        <td className="p-3 sm:p-4 text-text-muted">
+                          <span className="inline-flex items-start gap-2">
+                            {row.s[1] === 1 ? <Minus size={14} className="text-yellow-500 mt-0.5 shrink-0" /> : <X size={14} className="text-red-400 mt-0.5 shrink-0" />}
+                            {row.sg}
+                          </span>
+                        </td>
+                        <td className="p-3 sm:p-4 text-text-muted">
+                          <span className="inline-flex items-start gap-2">
+                            {row.s[2] === 1 ? <Minus size={14} className="text-yellow-500 mt-0.5 shrink-0" /> : <X size={14} className="text-red-400 mt-0.5 shrink-0" />}
+                            {row.c}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="mt-8 text-center">
+                <Link href="/compare" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-text-muted hover:text-accent transition-colors">
+                  Full comparison <span className="text-[10px]">→</span>
+                </Link>
               </div>
             </div>
 
