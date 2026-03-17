@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ShieldCheck, Crosshair, Code, Activity, Database, Key, Github, Check, X, Minus } from "lucide-react";
 import { MarketingNav } from "@/components/layout/MarketingNav";
 
@@ -364,8 +365,7 @@ export default function Home() {
         <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16 flex justify-between gap-8 sm:gap-12 border-x border-border flex-wrap relative">
           <div className="w-full lg:w-1/3 flex flex-col gap-4 sm:gap-6">
              <div className="flex items-center gap-1 font-bold text-2xl tracking-tighter">
-               <span className="w-4 h-[3px] bg-accent rounded-sm inline-block mb-1"></span>
-               bouclier.eth
+               <Image src="/logo.svg" alt="Bouclier" width={160} height={32} className="h-7 w-auto" />
              </div>
              <p className="text-sm text-text-muted leading-relaxed font-mono max-w-sm">
                Open-source protocol for deterministic boundary controls on autonomous AI agents, built on Base L2.

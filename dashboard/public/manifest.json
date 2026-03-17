@@ -1,0 +1,16 @@
+{
+  "name": "Bouclier Protocol",
+  "short_name": "Bouclier",
+  "description": "The Trust Layer for AI Agents — On-chain permission management and audit trail",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F4F5",
+  "theme_color": "#FF451A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

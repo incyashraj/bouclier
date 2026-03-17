@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0F0F10"/>
+  
+  <!-- Grid pattern -->
+  <g opacity="0.06" stroke="#FFFFFF" stroke-width="0.5">
+    <line x1="0" y1="0" x2="0" y2="630"/>
+    <line x1="120" y1="0" x2="120" y2="630"/>
+    <line x1="240" y1="0" x2="240" y2="630"/>
+    <line x1="360" y1="0" x2="360" y2="630"/>
+    <line x1="480" y1="0" x2="480" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="720" y1="0" x2="720" y2="630"/>
+    <line x1="840" y1="0" x2="840" y2="630"/>
+    <line x1="960" y1="0" x2="960" y2="630"/>
+    <line x1="1080" y1="0" x2="1080" y2="630"/>
+    <line x1="1200" y1="0" x2="1200" y2="630"/>
+    <line x1="0" y1="0" x2="1200" y2="0"/>
+    <line x1="0" y1="126" x2="1200" y2="126"/>
+    <line x1="0" y1="252" x2="1200" y2="252"/>
+    <line x1="0" y1="378" x2="1200" y2="378"/>
+    <line x1="0" y1="504" x2="1200" y2="504"/>
+    <line x1="0" y1="630" x2="1200" y2="630"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="100" y="240" width="48" height="10" rx="3" fill="#FF451A"/>
+
+  <!-- Title -->
+  <text x="166" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="700" letter-spacing="-3" fill="#FFFFFF">bouclier.eth</text>
+
+  <!-- Tagline -->
+  <text x="100" y="320" font-family="ui-monospace, monospace" font-size="24" fill="#A1A1AA" letter-spacing="1">THE TRUST LAYER FOR AI AGENTS</text>
+
+  <!-- Description -->
+  <text x="100" y="380" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#737373">On-chain permission management &amp; audit trail</text>
+  <text x="100" y="412" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#737373">for autonomous AI agents on Base L2</text>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="580" width="1200" height="50" fill="#1A1A1C"/>
+  <text x="100" y="612" font-family="ui-monospace, monospace" font-size="16" fill="#737373" letter-spacing="2">OPEN SOURCE · MIT LICENSE · BUILT ON BASE</text>
+  
+  <!-- Version badge -->
+  <rect x="980" y="590" width="120" height="30" rx="4" fill="#FF451A" opacity="0.15"/>
+  <text x="1005" y="611" font-family="ui-monospace, monospace" font-size="14" fill="#FF451A" letter-spacing="1">v0.1.0-alpha</text>
+</svg>

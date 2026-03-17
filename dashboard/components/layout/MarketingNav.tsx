@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Menu, X } from "lucide-react";
 
@@ -38,8 +39,7 @@ export function MarketingNav() {
             className="flex items-center gap-1 cursor-pointer font-bold text-2xl tracking-tighter hover:text-accent transition-colors" 
             onClick={() => router.push('/')}
           >
-            <span className="w-4 h-[3px] bg-text rounded-sm inline-block mb-1"></span>
-            bouclier.eth
+            <Image src="/logo.svg" alt="Bouclier" width={160} height={32} priority className="h-7 w-auto" />
           </div>
 
           {/* Desktop nav */}

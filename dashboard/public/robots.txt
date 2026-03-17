@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bouclier.eth.limo/sitemap.xml
