@@ -1,11 +1,11 @@
 "use client";
 
 import { MarketingPageTemplate } from "@/components/layout/MarketingPageTemplate";
-import { FileText, BookOpen, Code, Terminal, Shield, Layers, ArrowRight, ExternalLink, Copy, Check, Zap, Database, Activity, Box, GitBranch } from "lucide-react";
-import { motion } from "framer-motion";
+import { FileText, ArrowRight, ExternalLink, Copy, Check, Zap, Database, Activity, Shield, AlertTriangle, Eye, Clock, Ban } from "lucide-react";
 import { useState } from "react";
 
 const GITHUB_URL = "https://github.com/incyashraj/bouclier";
+const BASESCAN = "https://sepolia.basescan.org/address/";
 
 function CodeBlock({ title, children }: { title: string; children: string }) {
   const [copied, setCopied] = useState(false);
@@ -29,12 +29,35 @@ function CodeBlock({ title, children }: { title: string; children: string }) {
   );
 }
 
+function InfoBox({ type = "info", children }: { type?: "info" | "warning" | "tip"; children: React.ReactNode }) {
+  const styles = {
+    info: { border: "border-blue-200", bg: "bg-blue-50", icon: <Zap size={14} className="text-blue-600 mt-0.5 shrink-0" /> },
+    warning: { border: "border-amber-200", bg: "bg-amber-50", icon: <AlertTriangle size={14} className="text-amber-600 mt-0.5 shrink-0" /> },
+    tip: { border: "border-emerald-200", bg: "bg-emerald-50", icon: <Check size={14} className="text-emerald-600 mt-0.5 shrink-0" /> },
+  };
+  const s = styles[type];
+  return (
+    <div className={`${s.border} ${s.bg} border rounded-lg p-4 flex items-start gap-3`}>
+      {s.icon}
+      <div className="text-xs text-text-muted leading-relaxed">{children}</div>
+    </div>
+  );
+}
+
+const CONTRACT_ADDRESSES = {
+  AgentRegistry: "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb",
+  PermissionVault: "0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7",
+  SpendTracker: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+  RevocationRegistry: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa",
+  AuditLogger: "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735",
+};
+
 export default function DocsPage() {
   return (
     <MarketingPageTemplate
-      title="Documentation"
-      subtitle="Developer Guide"
-      description="Everything you need to understand, integrate, and build on the Bouclier protocol. From installation to deploying custom policies."
+      title="Developer Guide"
+      subtitle="Documentation"
+      description="Everything you need to integrate Bouclier into your AI agent. From installation to querying audit trails."
       icon={FileText}
     >
       {/* Table of Contents */}
@@ -47,13 +70,19 @@ export default function DocsPage() {
           <nav className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {[
               { label: "Quick Start", anchor: "#quickstart" },
-              { label: "Architecture Overview", anchor: "#architecture" },
+              { label: "Architecture", anchor: "#architecture" },
               { label: "Core Concepts", anchor: "#concepts" },
-              { label: "Smart Contracts", anchor: "#contracts" },
-              { label: "SDK Integration", anchor: "#sdk" },
-              { label: "Writing Policies", anchor: "#policies" },
-              { label: "Sentinel Nodes", anchor: "#nodes" },
-              { label: "API Reference", anchor: "#api" },
+              { label: "Contract Addresses", anchor: "#contracts" },
+              { label: "TypeScript SDK", anchor: "#sdk-ts" },
+              { label: "Python SDK", anchor: "#sdk-py" },
+              { label: "Granting Permissions", anchor: "#granting" },
+              { label: "Spend Tracking", anchor: "#spending" },
+              { label: "Revocation", anchor: "#revocation" },
+              { label: "Querying the Audit Trail", anchor: "#audit" },
+              { label: "Session Keys", anchor: "#sessions" },
+              { label: "Framework Integrations", anchor: "#frameworks" },
+              { label: "Contract API Reference", anchor: "#api" },
+              { label: "SDK Method Reference", anchor: "#sdk-ref" },
             ].map((item, i) => (
               <a key={i} href={item.anchor} className="flex items-center gap-3 p-2 rounded-md hover:bg-surface/60 transition-colors group">
                 <span className="font-mono text-[10px] text-accent w-5">{String(i + 1).padStart(2, "0")}</span>
@@ -79,7 +108,7 @@ export default function DocsPage() {
                 { name: "Node.js", ver: "v18+" },
                 { name: "Foundry", ver: "latest" },
                 { name: "Git", ver: "v2+" },
-                { name: "A wallet", ver: "with Base Sepolia ETH" },
+                { name: "Base Sepolia ETH", ver: "from faucet" },
               ].map((p, i) => (
                 <div key={i} className="flex items-center justify-between p-3 border border-border/40 rounded-md bg-background">
                   <span className="text-sm font-bold text-text">{p.name}</span>
@@ -89,35 +118,43 @@ export default function DocsPage() {
             </div>
           </div>
 
-          <CodeBlock title="Terminal — Clone & Install">{`# Clone the monorepo
-git clone https://github.com/incyashraj/bouclier.git
-cd bouclier
+          <CodeBlock title="Terminal — Install the TypeScript SDK">{`npm install @bouclier/sdk viem`}</CodeBlock>
 
-# Install dependencies
-npm install
+          <CodeBlock title="Terminal — Or install the Python SDK">{`pip install bouclier-sdk`}</CodeBlock>
 
-# Build contracts
-cd contracts
-forge build
+          <CodeBlock title="quickstart.ts — Your first integration">{`import { BouclierClient } from "@bouclier/sdk";
+import { createPublicClient, http } from "viem";
+import { baseSepolia } from "viem/chains";
 
-# Run tests
-forge test`}</CodeBlock>
+const publicClient = createPublicClient({
+  chain: baseSepolia,
+  transport: http("https://sepolia.base.org"),
+});
 
-          <CodeBlock title="Terminal — Deploy to Base Sepolia">{`# Set environment variables
-export BASE_SEPOLIA_RPC="https://sepolia.base.org"
-export PRIVATE_KEY="your-deployer-private-key"
+const bouclier = new BouclierClient({
+  publicClient,
+  addresses: {
+    agentRegistry:      "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb",
+    permissionVault:    "0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7",
+    spendTracker:       "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+    revocationRegistry: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa",
+    auditLogger:        "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735",
+  },
+});
 
-# Deploy the registry contract
-forge script script/DeployRegistry.s.sol \\
-  --rpc-url $BASE_SEPOLIA_RPC \\
-  --private-key $PRIVATE_KEY \\
-  --broadcast
+// Look up an agent
+const agentId = await bouclier.getAgentId("0xYourAgentWallet");
+const agent = await bouclier.resolveAgent(agentId);
+console.log(agent.status, agent.model);
 
-# Deploy a sample policy
-forge script script/DeployTransferLimitPolicy.s.sol \\
-  --rpc-url $BASE_SEPOLIA_RPC \\
-  --private-key $PRIVATE_KEY \\
-  --broadcast`}</CodeBlock>
+// Check permissions
+const scope = await bouclier.getActiveScope(agentId);
+console.log("Daily cap:", scope.dailySpendCapUSD);
+console.log("Expires:", new Date(Number(scope.validUntil) * 1000));
+
+// Check revocation
+const revoked = await bouclier.isRevoked(agentId);
+console.log("Revoked:", revoked);`}</CodeBlock>
         </div>
       </div>
 
@@ -125,54 +162,52 @@ forge script script/DeployTransferLimitPolicy.s.sol \\
       <div id="architecture" className="mb-16 scroll-mt-24">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-8 h-[1px] bg-accent"></div>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">02 — Architecture Overview</span>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">02 — Architecture</span>
         </div>
         <div className="border border-border rounded-lg p-5 sm:p-8 bg-surface/30 font-mono text-xs sm:text-sm leading-relaxed text-text-muted overflow-x-auto">
-          <pre className="whitespace-pre">{`  ┌─────────────────────────────────────────────┐
-  │           AI Agent (any framework)          │
-  │  LangChain · AutoGPT · CrewAI · Custom     │
-  └──────────────────┬──────────────────────────┘
-                     │ action request
-                     ▼
-  ┌─────────────────────────────────────────────┐
-  │           Bouclier SDK                      │
-  │  @bouclier/sdk · bouclier-rs · bouclier-py │
-  └──────────────────┬──────────────────────────┘
-                     │ validate()
-                     ▼
-  ┌─────────────────────────────────────────────┐
-  │         Sentinel Network                    │
-  │    Distributed policy verification nodes    │
-  └──────────────────┬──────────────────────────┘
-                     │ check policies
-                     ▼
-  ┌─────────────────────────────────────────────┐
-  │       On-Chain Registry (Base L2)           │
-  │  Agent IDs · Policy Bindings · Revocation   │
-  └──────────────────┬──────────────────────────┘
-                     │ settlement
-                     ▼
-  ┌─────────────────────────────────────────────┐
-  │         Target Protocol / Contract          │
-  │  DeFi · NFT · DAO · Any EVM Contract       │
-  └─────────────────────────────────────────────┘`}</pre>
+          <pre className="whitespace-pre">{`  Human / Agent Owner
+        |
+        |  EIP-712 signed PermissionScope grant
+        v
+  +---------------------------------------------+
+  |          PermissionVault (ERC-7579)         |
+  |  Validates every UserOp against the grant:  |
+  |  protocols, selectors, tokens, spend caps,  |
+  |  time windows, chain ID                     |
+  +------+------------+-------------+-----------+
+         |            |             |
+         v            v             v
+  +-----------+ +-----------+ +---------------+
+  |  Agent    | | Revocation| |   Spend       |
+  |  Registry | | Registry  | |   Tracker     |
+  |           | |           | |               |
+  | Identity  | | Kill      | | Chainlink     |
+  | + status  | | switch    | | rolling USD   |
+  +-----------+ +-----------+ +---------------+
+         |            |             |
+         +------------+-------------+
+                      v
+               +-------------+
+               | AuditLogger |
+               | On-chain +  |
+               | IPFS anchor |
+               +-------------+`}</pre>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-6">
           {[
-            { icon: Database, title: "Registry Layer", desc: "On-chain identity and policy bindings on Base L2. Immutable contract state." },
-            { icon: Activity, title: "Verification Layer", desc: "Sentinel nodes intercept and validate agent actions against registered policies." },
-            { icon: Shield, title: "Policy Layer", desc: "Composable smart contract modules — each one defines a specific constraint." },
-          ].map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <div key={i} className="p-4 border border-border rounded-lg bg-surface/40">
-                <Icon size={16} className="text-accent mb-2" />
-                <h4 className="font-bold text-text text-sm mb-1">{item.title}</h4>
-                <p className="text-xs text-text-muted leading-relaxed">{item.desc}</p>
-              </div>
-            );
-          })}
+            { icon: Database, title: "AgentRegistry", desc: "On-chain DID. Register agents, track status, resolve by wallet." },
+            { icon: Shield, title: "PermissionVault", desc: "ERC-7579 validator module. Enforces scoped permissions on every UserOp." },
+            { icon: Activity, title: "SpendTracker", desc: "Rolling-window spend accounting with Chainlink oracles + TWAP fallback." },
+            { icon: Ban, title: "RevocationRegistry", desc: "Kill switch. Instant emergency revoke or 24h timelock reinstatement." },
+            { icon: Eye, title: "AuditLogger", desc: "Tamper-proof event log. Every action hashed, timestamped, IPFS-anchored." },
+          ].map((item, i) => (
+            <div key={i} className="p-4 border border-border rounded-lg bg-surface/40">
+              <item.icon size={16} className="text-accent mb-2" />
+              <h4 className="font-bold text-text text-xs mb-1">{item.title}</h4>
+              <p className="text-[11px] text-text-muted leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -184,12 +219,13 @@ forge script script/DeployTransferLimitPolicy.s.sol \\
         </div>
         <div className="space-y-3">
           {[
-            { term: "Agent ID", type: "bytes32", def: "A unique identifier derived from keccak256(abi.encodePacked(owner, metadata, salt)). This is the on-chain identity for an autonomous agent." },
-            { term: "Policy Contract", type: "IBouclierPolicy", def: "An immutable smart contract that implements a validate() function. Returns true if the agent action is permitted, false to block." },
-            { term: "Policy Binding", type: "mapping", def: "The on-chain link between an Agent ID and an array of policy contract addresses. All policies must pass for an action to proceed." },
-            { term: "Sentinel Node", type: "off-chain", def: "A verification node that monitors the Base L2 mempool, intercepts agent transactions, and runs policy checks before settlement." },
-            { term: "Revocation", type: "transaction", def: "A single-call operation (revokeAgent) that globally deactivates an agent. All sentinel nodes stop processing its transactions immediately." },
-            { term: "Validation Result", type: "struct", def: "The response from a policy check: { valid: bool, reason: string }. On failure, the sentinel node blocks the action and logs the reason." },
+            { term: "Agent ID", type: "bytes32", def: "Unique on-chain identity derived from keccak256(agentWallet, owner, registeredAt). Created by AgentRegistry.register()." },
+            { term: "PermissionScope", type: "struct", def: "The full policy grant for an agent: which protocols it can call, which tokens it can move, daily/per-tx USD caps, time window, expiry. Signed via EIP-712 by the agent owner." },
+            { term: "Revocation", type: "on-chain", def: "Calling revoke() on RevocationRegistry sets a permanent flag. All subsequent validateUserOp() calls for that agent return VALIDATION_FAILED. Reinstatement requires a 24-hour timelock." },
+            { term: "Rolling Spend", type: "ring buffer", def: "SpendTracker records every USD-denominated spend in a ring buffer (max 1000 entries). getRollingSpend(agentId, windowSeconds) sums entries within the window." },
+            { term: "Audit Record", type: "struct", def: "Logged by AuditLogger on every agent action: eventId, agentId, target, selector, usdAmount, allowed/denied, violationType, IPFS CID." },
+            { term: "ERC-7579 Module", type: "validator", def: "PermissionVault implements the IModule interface. It can be installed on any ERC-4337 modular smart account (Safe, Kernel, Biconomy, etc.) as a validation module." },
+            { term: "Session Key", type: "ephemeral", def: "SessionKeyManager allows an agent owner to sign a time-bounded, target-restricted, spend-limited grant for a temporary key \u2014 without exposing the master key." },
           ].map((item, i) => (
             <div key={i} className="p-4 border border-border rounded-lg bg-surface/40">
               <div className="flex items-center gap-3 mb-1">
@@ -202,352 +238,729 @@ forge script script/DeployTransferLimitPolicy.s.sol \\
         </div>
       </div>
 
-      {/* 4. Smart Contracts */}
+      {/* 4. Contract Addresses */}
       <div id="contracts" className="mb-16 scroll-mt-24">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-8 h-[1px] bg-accent"></div>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">04 — Smart Contracts</span>
-        </div>
-
-        <div className="space-y-6">
-          <CodeBlock title="IBouclierRegistry.sol">{`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
-
-interface IBouclierRegistry {
-    /// @notice Register a new agent with attached policies
-    /// @param agentId Unique bytes32 identifier for the agent
-    /// @param policies Array of policy contract addresses
-    function registerAgent(
-        bytes32 agentId,
-        address[] calldata policies
-    ) external;
-
-    /// @notice Revoke an agent — stops all sentinel processing
-    /// @param agentId The agent to revoke
-    function revokeAgent(bytes32 agentId) external;
-
-    /// @notice Check if an agent is currently active
-    function isActive(bytes32 agentId) external view returns (bool);
-
-    /// @notice Get all policies attached to an agent
-    function getPolicies(
-        bytes32 agentId
-    ) external view returns (address[] memory);
-
-    /// @notice Add a policy to an existing agent
-    function addPolicy(bytes32 agentId, address policy) external;
-
-    /// @notice Remove a policy from an agent
-    function removePolicy(bytes32 agentId, address policy) external;
-
-    event AgentRegistered(bytes32 indexed agentId, address indexed owner);
-    event AgentRevoked(bytes32 indexed agentId);
-    event PolicyAdded(bytes32 indexed agentId, address indexed policy);
-    event PolicyRemoved(bytes32 indexed agentId, address indexed policy);
-}`}</CodeBlock>
-
-          <CodeBlock title="IBouclierPolicy.sol">{`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
-
-interface IBouclierPolicy {
-    /// @notice Validate an agent action against this policy
-    /// @param agentId The registered agent identifier
-    /// @param target The contract being called
-    /// @param value The ETH value being sent
-    /// @param data The calldata being executed
-    /// @return valid Whether the action is permitted
-    function validate(
-        bytes32 agentId,
-        address target,
-        uint256 value,
-        bytes calldata data
-    ) external view returns (bool valid);
-}`}</CodeBlock>
-
-          <CodeBlock title="TransferLimitPolicy.sol — Example">{`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
-
-import {IBouclierPolicy} from "./IBouclierPolicy.sol";
-
-/// @title TransferLimitPolicy
-/// @notice Enforces a maximum ETH transfer per transaction
-contract TransferLimitPolicy is IBouclierPolicy {
-    uint256 public immutable maxTransferWei;
-
-    constructor(uint256 _maxTransferWei) {
-        maxTransferWei = _maxTransferWei;
-    }
-
-    function validate(
-        bytes32, /* agentId */
-        address, /* target */
-        uint256 value,
-        bytes calldata /* data */
-    ) external view override returns (bool valid) {
-        return value <= maxTransferWei;
-    }
-}`}</CodeBlock>
-        </div>
-      </div>
-
-      {/* 5. SDK Integration */}
-      <div id="sdk" className="mb-16 scroll-mt-24">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-8 h-[1px] bg-accent"></div>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">05 — SDK Integration</span>
-        </div>
-
-        <div className="space-y-6">
-          <div className="border border-amber-200 bg-amber-50 rounded-lg p-4 flex items-start gap-3">
-            <Zap size={16} className="text-amber-600 mt-0.5 flex-shrink-0" />
-            <p className="text-xs text-text-muted leading-relaxed">The TypeScript SDK is in active development. Install from the monorepo while the npm package is being prepared.</p>
-          </div>
-
-          <CodeBlock title="install.sh">{`# From the monorepo root
-cd sdk
-npm install
-npm run build
-
-# Link for local development
-npm link`}</CodeBlock>
-
-          <CodeBlock title="register-agent.ts">{`import { BouclierClient } from "@bouclier/sdk";
-import { createWalletClient, http } from "viem";
-import { baseSepolia } from "viem/chains";
-import { privateKeyToAccount } from "viem/accounts";
-
-// Initialize the Bouclier client
-const account = privateKeyToAccount(process.env.PRIVATE_KEY as \`0x\${string}\`);
-const bouclier = new BouclierClient({
-  chain: baseSepolia,
-  transport: http(process.env.BASE_SEPOLIA_RPC),
-  account,
-});
-
-// Generate an agent ID
-const agentId = bouclier.generateAgentId({
-  name: "treasury-bot",
-  version: "1.0.0",
-  salt: "unique-salt-value",
-});
-
-// Register with policies
-const tx = await bouclier.registerAgent({
-  agentId,
-  policies: [
-    "0x...TransferLimitPolicy",
-    "0x...ScopeRestrictionPolicy",
-  ],
-});
-
-console.log("Agent registered:", tx.hash);
-console.log("Agent ID:", agentId);`}</CodeBlock>
-
-          <CodeBlock title="validate-action.ts">{`// Validate an action before execution
-const result = await bouclier.validate({
-  agentId,
-  target: "0x...TargetContract",
-  value: 0n,
-  data: encodedCalldata,
-});
-
-if (result.valid) {
-  // All policies passed — safe to execute
-  const tx = await walletClient.sendTransaction({
-    to: target,
-    value: 0n,
-    data: encodedCalldata,
-  });
-} else {
-  console.error("Policy violation:", result.reason);
-}
-
-// Check agent status
-const isActive = await bouclier.isActive(agentId);
-
-// Get attached policies
-const policies = await bouclier.getPolicies(agentId);
-
-// Revoke in emergency
-await bouclier.revokeAgent(agentId);`}</CodeBlock>
-        </div>
-      </div>
-
-      {/* 6. Writing Policies */}
-      <div id="policies" className="mb-16 scroll-mt-24">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-8 h-[1px] bg-accent"></div>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">06 — Writing Custom Policies</span>
-        </div>
-
-        <div className="space-y-6">
-          <div className="border border-border rounded-lg p-5 sm:p-6 bg-surface/30">
-            <h3 className="font-bold text-text text-base mb-3">Policy Design Rules</h3>
-            <ul className="space-y-2">
-              {[
-                "Policies must implement IBouclierPolicy with a pure/view validate() function",
-                "Policies should be stateless where possible — use immutable constructor params",
-                "validate() must return true to allow and false to block — no reverts",
-                "Multiple policies are checked in sequence — ALL must pass",
-                "Deploy as immutable contracts — no upgradeable proxies for trust guarantees",
-              ].map((rule, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-text-muted leading-relaxed">
-                  <span className="text-accent font-mono text-[10px] mt-0.5">{String(i + 1).padStart(2, "0")}</span>
-                  {rule}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <CodeBlock title="ScopeRestrictionPolicy.sol — Custom Example">{`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
-
-import {IBouclierPolicy} from "./IBouclierPolicy.sol";
-
-/// @title ScopeRestrictionPolicy  
-/// @notice Restricts an agent to only interact with whitelisted contracts
-contract ScopeRestrictionPolicy is IBouclierPolicy {
-    mapping(address => bool) public allowedTargets;
-    
-    constructor(address[] memory _targets) {
-        for (uint i = 0; i < _targets.length; i++) {
-            allowedTargets[_targets[i]] = true;
-        }
-    }
-
-    function validate(
-        bytes32, /* agentId */
-        address target,
-        uint256, /* value */
-        bytes calldata /* data */
-    ) external view override returns (bool valid) {
-        return allowedTargets[target];
-    }
-}`}</CodeBlock>
-
-          <CodeBlock title="test/ScopeRestrictionPolicy.t.sol — Testing">{`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
-
-import "forge-std/Test.sol";
-import "../src/ScopeRestrictionPolicy.sol";
-
-contract ScopeRestrictionPolicyTest is Test {
-    ScopeRestrictionPolicy policy;
-    address allowed = address(0xA);
-    address blocked = address(0xB);
-
-    function setUp() public {
-        address[] memory targets = new address[](1);
-        targets[0] = allowed;
-        policy = new ScopeRestrictionPolicy(targets);
-    }
-
-    function testAllowedTarget() public view {
-        bool valid = policy.validate(
-            bytes32(0), allowed, 0, ""
-        );
-        assertTrue(valid);
-    }
-
-    function testBlockedTarget() public view {
-        bool valid = policy.validate(
-            bytes32(0), blocked, 0, ""
-        );
-        assertFalse(valid);
-    }
-
-    function testFuzz(address target) public view {
-        bool valid = policy.validate(
-            bytes32(0), target, 0, ""
-        );
-        assertEq(valid, target == allowed);
-    }
-}`}</CodeBlock>
-        </div>
-      </div>
-
-      {/* 7. Sentinel Nodes */}
-      <div id="nodes" className="mb-16 scroll-mt-24">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-8 h-[1px] bg-accent"></div>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">07 — Sentinel Nodes</span>
-        </div>
-
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { title: "Monitor", desc: "Scans the Base L2 mempool for transactions from registered agents" },
-              { title: "Verify", desc: "Runs each pending action through the agent's attached policy contracts" },
-              { title: "Enforce", desc: "Blocks invalid transactions and logs violations to the on-chain audit trail" },
-            ].map((item, i) => (
-              <div key={i} className="p-4 border border-border rounded-lg bg-surface/40 text-center">
-                <div className="w-8 h-8 rounded-full border border-accent/30 bg-accent/10 flex items-center justify-center text-accent font-mono text-xs font-bold mx-auto mb-3">{i + 1}</div>
-                <h4 className="font-bold text-text text-sm mb-1">{item.title}</h4>
-                <p className="text-xs text-text-muted">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <CodeBlock title="Terminal — Run a Testnet Node">{`# Clone and build
-git clone https://github.com/incyashraj/bouclier.git
-cd bouclier/node
-cargo build --release
-
-# Initialize configuration
-./target/release/bouclier-node init --network base-sepolia
-
-# Start the sentinel node
-./target/release/bouclier-node start \\
-  --rpc $BASE_SEPOLIA_RPC \\
-  --registry 0x...RegistryAddress`}</CodeBlock>
-        </div>
-      </div>
-
-      {/* 8. API Reference */}
-      <div id="api" className="mb-20 scroll-mt-24">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-8 h-[1px] bg-accent"></div>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">08 — API Reference</span>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">04 — Contract Addresses (Base Sepolia)</span>
         </div>
 
         <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
-          <table className="w-full text-sm font-mono min-w-[500px]">
-            <thead className="text-[11px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border">
+          <table className="w-full text-sm min-w-[500px]">
+            <thead className="text-[11px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border font-mono">
               <tr>
-                <th className="font-normal py-3 px-4 text-left">Method</th>
-                <th className="font-normal py-3 px-4 text-left">Parameters</th>
-                <th className="font-normal py-3 px-4 text-left">Returns</th>
+                <th className="font-normal py-3 px-4 text-left">Contract</th>
+                <th className="font-normal py-3 px-4 text-left">Address</th>
+                <th className="font-normal py-3 px-4 text-left">Basescan</th>
               </tr>
             </thead>
             <tbody>
-              {[
-                { method: "registerAgent", params: "agentId, policies[]", returns: "TransactionHash" },
-                { method: "revokeAgent", params: "agentId", returns: "TransactionHash" },
-                { method: "isActive", params: "agentId", returns: "boolean" },
-                { method: "getPolicies", params: "agentId", returns: "address[]" },
-                { method: "addPolicy", params: "agentId, policy", returns: "TransactionHash" },
-                { method: "removePolicy", params: "agentId, policy", returns: "TransactionHash" },
-                { method: "validate", params: "agentId, target, value, data", returns: "{ valid, reason }" },
-                { method: "generateAgentId", params: "name, version, salt", returns: "bytes32" },
-              ].map((r, i) => (
-                <tr key={i} className="border-b border-border/40 hover:bg-surface/40 transition-colors">
-                  <td className="py-3 px-4 text-accent font-bold text-xs">{r.method}</td>
-                  <td className="py-3 px-4 text-text-muted text-xs">{r.params}</td>
-                  <td className="py-3 px-4 text-text text-xs">{r.returns}</td>
+              {Object.entries(CONTRACT_ADDRESSES).map(([name, addr], i) => (
+                <tr key={name} className={`border-b border-border/40 ${i % 2 === 0 ? "" : "bg-[#FAFAFA]"}`}>
+                  <td className="py-3 px-4 font-bold text-text text-xs">{name}</td>
+                  <td className="py-3 px-4 font-mono text-[11px] text-text-muted">{addr}</td>
+                  <td className="py-3 px-4">
+                    <a href={`${BASESCAN}${addr.toLowerCase()}`} target="_blank" rel="noopener noreferrer" className="text-accent text-xs hover:underline flex items-center gap-1">
+                      Verified <ExternalLink size={10} />
+                    </a>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="mt-4">
+          <InfoBox type="info">
+            <span>All contracts are built with Solidity 0.8.24, Foundry, and OpenZeppelin v5. Source code is verified on Basescan and open on <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">GitHub</a>.</span>
+          </InfoBox>
+        </div>
+      </div>
+
+      {/* 5. TypeScript SDK */}
+      <div id="sdk-ts" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">05 — TypeScript SDK</span>
+        </div>
+
+        <div className="space-y-6">
+          <CodeBlock title="Terminal">{`npm install @bouclier/sdk`}</CodeBlock>
+
+          <CodeBlock title="Initialize BouclierClient">{`import { BouclierClient } from "@bouclier/sdk";
+import { createPublicClient, createWalletClient, http } from "viem";
+import { baseSepolia } from "viem/chains";
+import { privateKeyToAccount } from "viem/accounts";
+
+const publicClient = createPublicClient({
+  chain: baseSepolia,
+  transport: http("https://sepolia.base.org"),
+});
+
+// Read-only -- no wallet needed for queries
+const bouclier = new BouclierClient({
+  publicClient,
+  addresses: {
+    agentRegistry:      "0xc5288F059A1eCDb5E8957fC5c17E86754B7850fb",
+    permissionVault:    "0xff3107529d7815ea6FAAba2b3EfC257538D0Fbb7",
+    spendTracker:       "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+    revocationRegistry: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa",
+    auditLogger:        "0x42FDFC97CC5937E5c654dFE9494AA278A17D2735",
+  },
+});
+
+// With wallet -- needed for signing (grantPermission, buildScopeSignature)
+const account = privateKeyToAccount("0xYOUR_PRIVATE_KEY");
+const walletClient = createWalletClient({
+  account,
+  chain: baseSepolia,
+  transport: http("https://sepolia.base.org"),
+});
+const bouclierWithWallet = new BouclierClient({
+  publicClient,
+  walletClient,
+  addresses: { /* same as above */ },
+});`}</CodeBlock>
+
+          <CodeBlock title="Agent Lookup">{`// Get agent ID from wallet address
+const agentId = await bouclier.getAgentId("0xAgentWallet");
+
+// Resolve full agent record
+const agent = await bouclier.resolveAgent(agentId);
+// -> { agentId, agentAddress, owner, status, registeredAt,
+//     did, model, parentAgentId, metadataCID }
+
+// Check if agent is active
+const active = await bouclier.isAgentActive(agentId);
+
+// List all agents owned by an address
+const agents = await bouclier.getAgentsByOwner("0xOwnerWallet");`}</CodeBlock>
+
+          <CodeBlock title="Permission Queries">{`// Get the active permission scope for an agent
+const scope = await bouclier.getActiveScope(agentId);
+// -> { agentId, allowedProtocols, allowedSelectors, allowedTokens,
+//     dailySpendCapUSD, perTxSpendCapUSD, validFrom, validUntil,
+//     allowAnyProtocol, allowAnyToken, revoked, grantHash,
+//     windowStartHour, windowEndHour, windowDaysMask, allowedChainId }
+
+// Get the current grant nonce (increments with each new grant)
+const nonce = await bouclier.getGrantNonce(agentId);`}</CodeBlock>
+        </div>
+      </div>
+
+      {/* 6. Python SDK */}
+      <div id="sdk-py" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">06 — Python SDK</span>
+        </div>
+
+        <div className="space-y-6">
+          <CodeBlock title="Terminal">{`pip install bouclier-sdk`}</CodeBlock>
+
+          <CodeBlock title="quickstart.py">{`from bouclier import BouclierClient
+
+client = BouclierClient(rpc_url="https://sepolia.base.org")
+
+# Look up an agent
+agent_id = client.get_agent_id("0xAgentWallet")
+agent = client.resolve_agent(agent_id)
+print(f"Status: {agent.status}, Model: {agent.model}")
+
+# Check permissions
+scope = client.get_active_scope(agent_id)
+usd = scope.daily_spend_cap_usd / 1e18
+print(f"Daily cap: {usd} USD")
+
+# Check revocation
+is_revoked = client.is_revoked(agent_id)
+
+# Full audit trail -- returns hydrated AuditRecord objects
+trail = client.get_audit_trail(agent_id, offset=0, limit=100)
+for event in trail:
+    status = "PASS" if event.allowed else "FAIL"
+    usd = event.usd_amount / 1e18
+    print(f"{status} {event.target} {usd} USD")
+
+# Total events
+total = client.get_total_events(agent_id)
+print(f"Total actions logged: {total}")`}</CodeBlock>
+        </div>
+      </div>
+
+      {/* 7. Granting Permissions */}
+      <div id="granting" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">07 — Granting Permissions</span>
+        </div>
+
+        <div className="space-y-6">
+          <div className="border border-border rounded-lg p-5 sm:p-6 bg-surface/30">
+            <h3 className="font-bold text-text text-base mb-3">Permission Grant Flow</h3>
+            <div className="space-y-4 text-xs text-text-muted leading-relaxed">
+              <div className="flex gap-3">
+                <span className="font-mono text-accent font-bold w-5 shrink-0">1.</span>
+                <span>Agent owner constructs a <code className="font-mono bg-background border border-border px-1 rounded text-text">PermissionScope</code> struct specifying which protocols, tokens, selectors, spend caps, and time windows the agent is allowed.</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="font-mono text-accent font-bold w-5 shrink-0">2.</span>
+                <span>Owner signs the scope via <strong>EIP-712 typed data</strong> using the PermissionVault&apos;s domain separator and <code className="font-mono bg-background border border-border px-1 rounded text-text">SCOPE_TYPEHASH</code>.</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="font-mono text-accent font-bold w-5 shrink-0">3.</span>
+                <span>The signed scope is submitted to <code className="font-mono bg-background border border-border px-1 rounded text-text">PermissionVault.grantPermission()</code> which verifies the signature, increments the nonce, and stores the scope on-chain.</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="font-mono text-accent font-bold w-5 shrink-0">4.</span>
+                <span>Every subsequent UserOp from that agent is validated against this scope by <code className="font-mono bg-background border border-border px-1 rounded text-text">validateUserOp()</code>. If any check fails, validation returns 1 (reject).</span>
+              </div>
+            </div>
+          </div>
+
+          <CodeBlock title="grant-permission.ts">{`import { BouclierClient, GrantScopeParams } from "@bouclier/sdk";
+
+// Build the scope parameters
+const params: GrantScopeParams = {
+  agentId,
+  dailySpendCapUSD:  BigInt(1000e18),   // $1,000/day
+  perTxSpendCapUSD:  BigInt(100e18),    // $100/transaction
+  validFrom:         Math.floor(Date.now() / 1000),
+  validUntil:        Math.floor(Date.now() / 1000) + 86400 * 30, // 30 days
+  allowAnyProtocol:  false,
+  allowAnyToken:     false,
+  nonce:             await bouclier.getGrantNonce(agentId),
+};
+
+// Sign via EIP-712 (requires walletClient)
+const signature = await bouclier.buildScopeSignature(params, account);
+
+// Submit the grant on-chain (direct contract call)
+// This stores the scope and emits PermissionGranted event`}</CodeBlock>
+
+          <InfoBox type="warning">
+            <span><strong>Grant nonces are sequential.</strong> Each new grant must use the next nonce. Call <code className="font-mono">getGrantNonce(agentId)</code> to get the current value before signing.</span>
+          </InfoBox>
+        </div>
+      </div>
+
+      {/* 8. Spend Tracking */}
+      <div id="spending" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">08 — Spend Tracking</span>
+        </div>
+
+        <div className="space-y-6">
+          <div className="border border-border rounded-lg p-5 sm:p-6 bg-surface/30">
+            <h3 className="font-bold text-text text-base mb-3">How Spend Limits Work</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              {[
+                { title: "Chainlink Oracles", desc: "Token prices are fetched from Chainlink price feeds. Each token maps to a feed address set by the admin." },
+                { title: "TWAP Fallback", desc: "If the latest Chainlink round is stale (>1 hour), SpendTracker falls back to a 4-round TWAP average." },
+                { title: "Ring Buffer", desc: "Spends are stored in a ring buffer (max 1,000 entries per agent). getRollingSpend() sums entries within a time window." },
+                { title: "Two Cap Types", desc: "dailySpendCapUSD (rolling 24h window) and perTxSpendCapUSD (single transaction limit). Both are USD-denominated (18 decimals)." },
+              ].map((item, i) => (
+                <div key={i} className="p-3 border border-border/40 rounded-md bg-background">
+                  <h4 className="font-bold text-text text-xs mb-1">{item.title}</h4>
+                  <p className="text-[11px] text-text-muted leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <CodeBlock title="Query spend on-chain (read via SDK)">{`// These are read-only calls -- no wallet needed
+
+// Check if a proposed spend would exceed the cap
+// Returns true if (rollingSpend + proposedUSD) <= capUSD
+const withinCap = await publicClient.readContract({
+  address: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+  abi: spendTrackerAbi,
+  functionName: "checkSpendCap",
+  args: [agentId, proposedUSD, capUSD],
+});
+
+// Get rolling spend for last 24 hours (86400 seconds)
+const dailySpend = await publicClient.readContract({
+  address: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+  abi: spendTrackerAbi,
+  functionName: "getRollingSpend",
+  args: [agentId, 86400n],
+});
+
+// Get USD value of a token amount
+const usdValue = await publicClient.readContract({
+  address: "0xA0bb860Ae111DbD0C174e7c8FA17495FcE9534e1",
+  abi: spendTrackerAbi,
+  functionName: "getUSDValue",
+  args: [tokenAddress, amount],
+});`}</CodeBlock>
+        </div>
+      </div>
+
+      {/* 9. Revocation */}
+      <div id="revocation" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">09 — Revocation</span>
+        </div>
+
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-5 border border-red-200 rounded-lg bg-red-50/50">
+              <h4 className="font-bold text-text text-sm mb-2 flex items-center gap-2"><Ban size={14} className="text-red-500" /> Revoke (Instant)</h4>
+              <p className="text-xs text-text-muted leading-relaxed mb-3">Calling <code className="font-mono bg-background border border-border px-1 rounded">revoke(agentId, reason, notes)</code> immediately sets the revoked flag. All future validateUserOp calls return VALIDATION_FAILED.</p>
+              <p className="text-[10px] font-mono text-text-muted">Requires: REVOKER_ROLE</p>
+            </div>
+            <div className="p-5 border border-amber-200 rounded-lg bg-amber-50/50">
+              <h4 className="font-bold text-text text-sm mb-2 flex items-center gap-2"><Clock size={14} className="text-amber-500" /> Reinstate (24h Timelock)</h4>
+              <p className="text-xs text-text-muted leading-relaxed mb-3">Calling <code className="font-mono bg-background border border-border px-1 rounded">reinstate(agentId, notes)</code> only works if 24 hours have passed since revocation. Guardians can bypass with emergencyReinstate.</p>
+              <p className="text-[10px] font-mono text-text-muted">Requires: REVOKER_ROLE (or GUARDIAN_ROLE for emergency)</p>
+            </div>
+          </div>
+
+          <CodeBlock title="Check revocation status">{`// Via SDK
+const revoked = await bouclier.isRevoked(agentId);
+
+// Direct contract read -- more detail
+const record = await publicClient.readContract({
+  address: "0xCBa8C42E7e69DB1746b0DCE4BF6Cd58d52c8e0aa",
+  abi: revocationRegistryAbi,
+  functionName: "getRevocationRecord",
+  args: [agentId],
+});
+// -> { revoked, revokedAt, reinstatedAt, revokedBy, reason, notes }`}</CodeBlock>
+
+          <div className="border border-border rounded-lg p-5 sm:p-6 bg-surface/30">
+            <h3 className="font-bold text-text text-sm mb-3">Revocation Reasons</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              {["UserRequested", "Suspicious", "Compromised", "PolicyViolation", "Emergency"].map((r, i) => (
+                <div key={r} className="text-center p-2 border border-border/40 rounded bg-background">
+                  <span className="font-mono text-accent text-[10px] block">{i}</span>
+                  <span className="text-[11px] text-text font-semibold">{r}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 10. Audit Trail */}
+      <div id="audit" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">10 — Querying the Audit Trail</span>
+        </div>
+
+        <div className="space-y-6">
+          <InfoBox type="tip">
+            <span>The audit trail is fully on-chain and queryable by anyone. No API key needed. Every action your agent took \u2014 allowed or denied \u2014 is logged with full context.</span>
+          </InfoBox>
+
+          <CodeBlock title="TypeScript — Full audit trail">{`// Get total number of logged events for an agent
+const total = await bouclier.getTotalEvents(agentId);
+console.log(\`Total events: \${total}\`);
+
+// Get hydrated audit records (convenience method)
+const trail = await bouclier.getAuditTrail(agentId, 0n, 50n);
+for (const record of trail) {
+  console.log({
+    eventId:       record.eventId,
+    target:        record.target,
+    selector:      record.selector,
+    usdAmount:     \`$\${Number(record.usdAmount) / 1e18}\`,
+    allowed:       record.allowed,
+    violationType: record.violationType || "none",
+    timestamp:     new Date(record.timestamp * 1000).toISOString(),
+    ipfsCID:       record.ipfsCID || "not anchored",
+  });
+}
+
+// Or page through event IDs manually
+const page1 = await bouclier.getAgentHistory(agentId, 0n, 100n);
+const page2 = await bouclier.getAgentHistory(agentId, 100n, 100n);
+
+// Fetch a single record by eventId
+const record = await bouclier.getAuditRecord(page1[0]);`}</CodeBlock>
+
+          <CodeBlock title="Python — Full audit trail">{`from bouclier import BouclierClient
+
+client = BouclierClient(rpc_url="https://sepolia.base.org")
+
+total = client.get_total_events(agent_id)
+trail = client.get_audit_trail(agent_id, offset=0, limit=100)
+
+for event in trail:
+    status = "ALLOWED" if event.allowed else "DENIED"
+    usd = event.usd_amount / 1e18
+    print(f"[{status}] {event.target} {usd} USD")`}</CodeBlock>
+
+          <div className="border border-border rounded-lg p-5 sm:p-6 bg-surface/30">
+            <h3 className="font-bold text-text text-sm mb-3">AuditRecord Fields</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[
+                { field: "eventId", type: "bytes32", desc: "Unique hash for this event" },
+                { field: "agentId", type: "bytes32", desc: "The agent that performed the action" },
+                { field: "actionHash", type: "bytes32", desc: "Hash of the full action calldata" },
+                { field: "target", type: "address", desc: "Contract that was called" },
+                { field: "selector", type: "bytes4", desc: "Function selector called" },
+                { field: "tokenAddress", type: "address", desc: "Token involved (if applicable)" },
+                { field: "usdAmount", type: "uint256", desc: "USD value (18 decimals)" },
+                { field: "timestamp", type: "uint48", desc: "Block timestamp" },
+                { field: "allowed", type: "bool", desc: "Whether the action was permitted" },
+                { field: "violationType", type: "string", desc: "Reason for denial (if blocked)" },
+                { field: "ipfsCID", type: "string", desc: "IPFS content hash (if anchored)" },
+              ].map((f) => (
+                <div key={f.field} className="flex items-start gap-2 p-2 border border-border/40 rounded bg-background">
+                  <span className="font-mono text-accent text-[11px] font-bold w-28 shrink-0">{f.field}</span>
+                  <span className="text-[11px] text-text-muted">{f.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 11. Session Keys */}
+      <div id="sessions" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">11 — Session Keys</span>
+        </div>
+
+        <div className="space-y-6">
+          <div className="border border-border rounded-lg p-5 sm:p-6 bg-surface/30">
+            <h3 className="font-bold text-text text-base mb-3">Ephemeral Session Keys</h3>
+            <p className="text-xs text-text-muted leading-relaxed mb-4">
+              SessionKeyManager lets an agent owner sign an EIP-712 typed <code className="font-mono bg-background border border-border px-1 rounded">SessionGrant</code> that
+              delegates limited authority to a temporary key. The session key can execute transactions without the master key, but only within the grant&apos;s bounds.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                { label: "Time bounds", desc: "validAfter to validUntil window" },
+                { label: "Target whitelist", desc: "Only allowed contract addresses" },
+                { label: "Spend limit", desc: "Cumulative USD budget per session" },
+                { label: "Nonce-based revocation", desc: "Revoke individual or batch sessions" },
+              ].map((item) => (
+                <div key={item.label} className="flex items-start gap-2 p-3 border border-border/40 rounded bg-background">
+                  <Check size={12} className="text-accent mt-0.5 shrink-0" />
+                  <div>
+                    <span className="text-xs font-bold text-text">{item.label}</span>
+                    <span className="text-[11px] text-text-muted ml-1">{item.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <CodeBlock title="SessionGrant struct">{`struct SessionGrant {
+    address sessionKey;       // Temporary key address
+    bytes32 agentId;          // Bouclier agent identity
+    address[] allowedTargets; // Whitelisted contracts
+    uint256 spendLimit;       // Max cumulative USD spend (18 dec)
+    uint48 validAfter;        // Unix timestamp -- start
+    uint48 validUntil;        // Unix timestamp -- expiry
+    uint256 nonce;            // For revocation
+}
+
+// Execute: signed by master, called by session key holder
+executeViaSession(grant, masterSig, target, value, data, spendUSD)
+
+// Revoke: called by master key
+revokeSession(nonce)
+batchRevokeSession([nonce1, nonce2, ...])
+
+// Query
+isSessionValid(grant, masterSig) -> (bool valid, address master)
+remainingBudget(sessionKey, agentId, nonce, spendLimit) -> uint256`}</CodeBlock>
+        </div>
+      </div>
+
+      {/* 12. Framework Integrations */}
+      <div id="frameworks" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">12 — Framework Integrations</span>
+        </div>
+
+        <div className="space-y-6">
+          <CodeBlock title="LangChain — Callback Handler">{`import { BouclierCallbackHandler } from "@bouclier/langchain";
+import { AgentExecutor } from "langchain/agents";
+
+const executor = AgentExecutor.fromAgentAndTools({
+  agent,
+  tools,
+  callbacks: [new BouclierCallbackHandler(bouclier, agentId)],
+});
+
+// Every tool call is validated against the agent's scope
+// Blocked actions throw with the violation reason`}</CodeBlock>
+
+          <CodeBlock title="Coinbase AgentKit">{`import { BouclierAgentKit } from "@bouclier/agentkit";
+
+// Wraps the base AgentKit -- all actions go through Bouclier
+const kit = new BouclierAgentKit(bouclier, agentId, baseKit);
+
+// kit.swap(), kit.transfer(), etc. now enforce permissions`}</CodeBlock>
+
+          <CodeBlock title="ELIZA / ElizaOS">{`import { bouclierPlugin } from "@bouclier/eliza-plugin";
+
+const agent = new ElizaAgent({
+  plugins: [bouclierPlugin(bouclier)],
+});
+
+// All agent actions validated before execution`}</CodeBlock>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { name: "@bouclier/langchain", install: "npm install @bouclier/langchain" },
+              { name: "@bouclier/agentkit", install: "npm install @bouclier/agentkit" },
+              { name: "@bouclier/eliza-plugin", install: "npm install @bouclier/eliza-plugin" },
+            ].map((pkg) => (
+              <div key={pkg.name} className="p-4 border border-border rounded-lg bg-surface/40">
+                <span className="font-mono text-accent text-xs font-bold block mb-2">{pkg.name}</span>
+                <code className="text-[10px] text-text-muted font-mono">{pkg.install}</code>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 13. Contract API Reference */}
+      <div id="api" className="mb-16 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">13 — Contract API Reference</span>
+        </div>
+
+        <div className="space-y-8">
+          {/* AgentRegistry */}
+          <div>
+            <h3 className="font-bold text-text text-sm mb-3 flex items-center gap-2"><Database size={14} className="text-accent" /> AgentRegistry</h3>
+            <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
+              <table className="w-full text-xs font-mono min-w-[600px]">
+                <thead className="text-[10px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border">
+                  <tr><th className="font-normal py-2 px-3 text-left">Function</th><th className="font-normal py-2 px-3 text-left">Access</th><th className="font-normal py-2 px-3 text-left">Returns</th></tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["register(agentWallet, model, parentAgentId, metadataCID)", "anyone", "bytes32 agentId"],
+                    ["resolve(agentId)", "view", "AgentRecord"],
+                    ["getAgentId(agentWallet)", "view", "bytes32"],
+                    ["getAgentsByOwner(owner)", "view", "bytes32[]"],
+                    ["isActive(agentId)", "view", "bool"],
+                    ["totalAgents()", "view", "uint256"],
+                    ["updateStatus(agentId, newStatus)", "owner/admin", "\u2014"],
+                  ].map(([fn, access, ret], i) => (
+                    <tr key={i} className="border-b border-border/40 hover:bg-surface/40">
+                      <td className="py-2 px-3 text-accent">{fn}</td>
+                      <td className="py-2 px-3 text-text-muted">{access}</td>
+                      <td className="py-2 px-3 text-text">{ret}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* PermissionVault */}
+          <div>
+            <h3 className="font-bold text-text text-sm mb-3 flex items-center gap-2"><Shield size={14} className="text-accent" /> PermissionVault</h3>
+            <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
+              <table className="w-full text-xs font-mono min-w-[600px]">
+                <thead className="text-[10px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border">
+                  <tr><th className="font-normal py-2 px-3 text-left">Function</th><th className="font-normal py-2 px-3 text-left">Access</th><th className="font-normal py-2 px-3 text-left">Returns</th></tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["validateUserOp(userOp, userOpHash)", "anyone", "uint256 (0=valid, 1=fail)"],
+                    ["grantPermission(agentId, scope, ownerSig)", "owner", "\u2014"],
+                    ["revokePermission(agentId)", "owner", "\u2014"],
+                    ["emergencyRevoke(agentId)", "owner", "\u2014"],
+                    ["getActiveScope(agentId)", "view", "PermissionScope"],
+                    ["grantNonces(agentId)", "view", "uint256"],
+                    ["isModuleType(moduleTypeId)", "pure", "bool"],
+                  ].map(([fn, access, ret], i) => (
+                    <tr key={i} className="border-b border-border/40 hover:bg-surface/40">
+                      <td className="py-2 px-3 text-accent">{fn}</td>
+                      <td className="py-2 px-3 text-text-muted">{access}</td>
+                      <td className="py-2 px-3 text-text">{ret}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* SpendTracker */}
+          <div>
+            <h3 className="font-bold text-text text-sm mb-3 flex items-center gap-2"><Activity size={14} className="text-accent" /> SpendTracker</h3>
+            <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
+              <table className="w-full text-xs font-mono min-w-[600px]">
+                <thead className="text-[10px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border">
+                  <tr><th className="font-normal py-2 px-3 text-left">Function</th><th className="font-normal py-2 px-3 text-left">Access</th><th className="font-normal py-2 px-3 text-left">Returns</th></tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["checkSpendCap(agentId, proposedUSD, capUSD)", "view", "bool"],
+                    ["getRollingSpend(agentId, windowSeconds)", "view", "uint256"],
+                    ["getUSDValue(token, amount)", "view", "uint256"],
+                    ["getPriceFeed(token)", "view", "address"],
+                    ["recordSpend(agentId, usdAmount, timestamp)", "VAULT_ROLE", "\u2014"],
+                  ].map(([fn, access, ret], i) => (
+                    <tr key={i} className="border-b border-border/40 hover:bg-surface/40">
+                      <td className="py-2 px-3 text-accent">{fn}</td>
+                      <td className="py-2 px-3 text-text-muted">{access}</td>
+                      <td className="py-2 px-3 text-text">{ret}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* RevocationRegistry */}
+          <div>
+            <h3 className="font-bold text-text text-sm mb-3 flex items-center gap-2"><Ban size={14} className="text-accent" /> RevocationRegistry</h3>
+            <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
+              <table className="w-full text-xs font-mono min-w-[600px]">
+                <thead className="text-[10px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border">
+                  <tr><th className="font-normal py-2 px-3 text-left">Function</th><th className="font-normal py-2 px-3 text-left">Access</th><th className="font-normal py-2 px-3 text-left">Returns</th></tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["isRevoked(agentId)", "view", "bool"],
+                    ["getRevocationRecord(agentId)", "view", "RevocationRecord"],
+                    ["revoke(agentId, reason, notes)", "REVOKER_ROLE", "\u2014"],
+                    ["batchRevoke(agentIds[], reason, notes)", "GUARDIAN_ROLE", "\u2014"],
+                    ["reinstate(agentId, notes)", "REVOKER_ROLE (24h lock)", "\u2014"],
+                    ["emergencyReinstate(agentId, notes)", "GUARDIAN_ROLE", "\u2014"],
+                  ].map(([fn, access, ret], i) => (
+                    <tr key={i} className="border-b border-border/40 hover:bg-surface/40">
+                      <td className="py-2 px-3 text-accent">{fn}</td>
+                      <td className="py-2 px-3 text-text-muted">{access}</td>
+                      <td className="py-2 px-3 text-text">{ret}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* AuditLogger */}
+          <div>
+            <h3 className="font-bold text-text text-sm mb-3 flex items-center gap-2"><Eye size={14} className="text-accent" /> AuditLogger</h3>
+            <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
+              <table className="w-full text-xs font-mono min-w-[600px]">
+                <thead className="text-[10px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border">
+                  <tr><th className="font-normal py-2 px-3 text-left">Function</th><th className="font-normal py-2 px-3 text-left">Access</th><th className="font-normal py-2 px-3 text-left">Returns</th></tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["getAuditRecord(eventId)", "view", "AuditRecord"],
+                    ["getAgentHistory(agentId, offset, limit)", "view", "bytes32[]"],
+                    ["getTotalEvents(agentId)", "view", "uint256"],
+                    ["logAction(agentId, actionHash, target, ...)", "LOGGER_ROLE", "bytes32 eventId"],
+                    ["addIPFSCID(eventId, cid)", "IPFS_ROLE", "\u2014"],
+                  ].map(([fn, access, ret], i) => (
+                    <tr key={i} className="border-b border-border/40 hover:bg-surface/40">
+                      <td className="py-2 px-3 text-accent">{fn}</td>
+                      <td className="py-2 px-3 text-text-muted">{access}</td>
+                      <td className="py-2 px-3 text-text">{ret}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 14. SDK Method Reference */}
+      <div id="sdk-ref" className="mb-20 scroll-mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-8 h-[1px] bg-accent"></div>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">14 — SDK Method Reference</span>
+        </div>
+
+        <div className="space-y-6">
+          <h3 className="font-bold text-text text-sm">TypeScript &mdash; BouclierClient</h3>
+          <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
+            <table className="w-full text-xs font-mono min-w-[600px]">
+              <thead className="text-[10px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border">
+                <tr>
+                  <th className="font-normal py-2 px-3 text-left">Method</th>
+                  <th className="font-normal py-2 px-3 text-left">Returns</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["resolveAgent(agentId)", "AgentRecord"],
+                  ["getAgentId(agentWallet)", "Hex"],
+                  ["getAgentsByOwner(owner)", "Hex[]"],
+                  ["isAgentActive(agentId)", "boolean"],
+                  ["getActiveScope(agentId)", "PermissionScope"],
+                  ["getGrantNonce(agentId)", "bigint"],
+                  ["buildScopeSignature(params, account)", "Hex"],
+                  ["isRevoked(agentId)", "boolean"],
+                  ["getAuditRecord(eventId)", "AuditRecord"],
+                  ["getAgentHistory(agentId, offset?, limit?)", "Hex[]"],
+                  ["getTotalEvents(agentId)", "bigint"],
+                  ["getAuditTrail(agentId, offset?, limit?)", "AuditRecord[]"],
+                ].map(([method, ret], i) => (
+                  <tr key={i} className="border-b border-border/40 hover:bg-surface/40">
+                    <td className="py-2 px-3 text-accent">{method}</td>
+                    <td className="py-2 px-3 text-text">{ret}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="font-bold text-text text-sm mt-8">Python &mdash; BouclierClient</h3>
+          <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
+            <table className="w-full text-xs font-mono min-w-[600px]">
+              <thead className="text-[10px] text-text-muted uppercase bg-[#FAFAFA] border-b border-border">
+                <tr>
+                  <th className="font-normal py-2 px-3 text-left">Method</th>
+                  <th className="font-normal py-2 px-3 text-left">Returns</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["resolve_agent(agent_id)", "AgentRecord"],
+                  ["get_agent_id(agent_wallet)", "str"],
+                  ["get_agents_by_owner(owner)", "list[str]"],
+                  ["is_agent_active(agent_id)", "bool"],
+                  ["get_active_scope(agent_id)", "PermissionScope"],
+                  ["is_revoked(agent_id)", "bool"],
+                  ["get_total_events(agent_id)", "int"],
+                  ["get_audit_trail(agent_id, offset?, limit?)", "list[AuditRecord]"],
+                ].map(([method, ret], i) => (
+                  <tr key={i} className="border-b border-border/40 hover:bg-surface/40">
+                    <td className="py-2 px-3 text-accent">{method}</td>
+                    <td className="py-2 px-3 text-text">{ret}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       {/* CTA */}
       <div className="border border-border rounded-lg p-6 sm:p-10 bg-[#FAFAFA] text-center mb-20">
         <h3 className="text-xl sm:text-2xl font-bold text-text mb-3">Start Building</h3>
-        <p className="text-text-muted mb-6 max-w-lg mx-auto text-sm">Clone the repo, deploy to testnet, and register your first agent.</p>
+        <p className="text-text-muted mb-6 max-w-lg mx-auto text-sm">
+          Install the SDK, connect to Base Sepolia, and integrate Bouclier into your agent in minutes.
+        </p>
         <div className="flex gap-3 sm:gap-4 justify-center flex-wrap">
-          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="px-5 sm:px-6 py-3 bg-accent text-white font-semibold uppercase tracking-wider text-sm rounded-sm hover:bg-accent-hover transition-colors flex items-center gap-2">View on GitHub <ExternalLink size={14} /></a>
-          <a href="/developers" className="px-5 sm:px-6 py-3 border border-border text-text font-semibold uppercase tracking-wider text-sm rounded-sm hover:bg-surface transition-colors flex items-center gap-2">SDK Reference <ArrowRight size={14} /></a>
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="px-5 sm:px-6 py-3 bg-accent text-white font-semibold uppercase tracking-wider text-sm rounded-sm hover:bg-accent-hover transition-colors flex items-center gap-2">
+            View on GitHub <ExternalLink size={14} />
+          </a>
+          <a href="/developers" className="px-5 sm:px-6 py-3 border border-border text-text font-semibold uppercase tracking-wider text-sm rounded-sm hover:bg-surface transition-colors flex items-center gap-2">
+            Integration Examples <ArrowRight size={14} />
+          </a>
         </div>
       </div>
     </MarketingPageTemplate>
