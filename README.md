@@ -185,8 +185,10 @@ All contracts are source-verified on Basescan. Solidity 0.8.24, built with Found
 ## Security
 
 - Static analysis via Slither on every commit
+- Symbolic execution via Mythril
 - Invariant testing with 128K+ fuzz calls via Foundry
-- Formal verification specs with Certora Prover
+- Property-based fuzzing via Echidna (10M iterations)
+- Formal verification with Certora Prover — 15 rules verified, 0 violations
 - Fork integration tests against live Base Sepolia
 
 Report vulnerabilities → [Security Advisories](https://github.com/incyashraj/bouclier/security/advisories)
