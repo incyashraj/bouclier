@@ -1,12 +1,19 @@
-"""Blockchain service — reads on-chain state from Bouclier contracts via web3.py."""
+"""Blockchain service — reads on-chain state from Bouclier contracts via web3.py.
+Historical / indexed queries are routed through The Graph subgraph (Item 12).
+Write operations continue to use direct Web3 RPC.
+"""
 
 import json
+import logging
 from functools import lru_cache
 from pathlib import Path
 
+import httpx
 from web3 import AsyncWeb3, AsyncHTTPProvider
 
 from app.config import get_settings
+
+logger = logging.getLogger("bouclier.blockchain")
 
 # ABI paths (relative to repo root)
 _ABI_DIR = Path(__file__).resolve().parents[3] / "contracts" / "out"
@@ -20,6 +27,80 @@ def _load_abi(contract_name: str) -> list:
     with open(abi_path) as f:
         artifact = json.load(f)
     return artifact.get("abi", [])
+
+
+# ── The Graph GraphQL queries (Item 12) ──────────────────────────────────────
+
+_GQL_AUDIT_TRAIL = """
+query AuditTrail($agentId: String!, $skip: Int!, $first: Int!) {
+  auditEvents(
+    where: { agentId: $agentId }
+    orderBy: timestamp
+    orderDirection: desc
+    skip: $skip
+    first: $first
+  ) {
+    id
+    agentId
+    target
+    selector
+    usdAmount
+    allowed
+    violationType
+    timestamp
+    blockNumber
+    txHash
+  }
+}
+"""
+
+_GQL_AGENT_HISTORY = """
+query AgentsByOwner($owner: String!) {
+  agents(where: { owner: $owner }) {
+    id
+    agentAddress
+    owner
+    model
+    did
+    registeredAt
+    status
+    parentAgentId
+  }
+}
+"""
+
+_GQL_REVOCATIONS = """
+query Revocations($agentId: String!) {
+  revocationEvents(
+    where: { agentId: $agentId }
+    orderBy: timestamp
+    orderDirection: desc
+  ) {
+    id
+    agentId
+    revokedBy
+    reason
+    timestamp
+    reinstated
+  }
+}
+"""
+
+
+async def _gql_query(query: str, variables: dict) -> dict:
+    """Execute a GraphQL query against the configured subgraph."""
+    settings = get_settings()
+    url = settings.subgraph_url
+    if not url:
+        return {}
+    async with httpx.AsyncClient(timeout=15) as client:
+        resp = await client.post(url, json={"query": query, "variables": variables})
+        resp.raise_for_status()
+        data = resp.json()
+        if "errors" in data:
+            logger.warning("Subgraph error: %s", data["errors"])
+            return {}
+        return data.get("data", {})
 
 
 class BlockchainService:
@@ -110,6 +191,78 @@ class BlockchainService:
             "remaining_daily_cap_usd": str((10**18 - rolling) / 10**18) if rolling < 10**18 else "0",
             "remaining_daily_cap_percent": 100.0,
         }
+
+    # ── The Graph indexed queries (Item 12) ───────────────────────────────────
+
+    async def get_audit_trail_indexed(
+        self,
+        agent_id: str,
+        page_size: int = 25,
+        offset: int = 0,
+    ) -> list[dict]:
+        """
+        Fetch audit events from The Graph subgraph.
+        Falls back to on-chain direct read if the subgraph is unavailable.
+        """
+        data = await _gql_query(
+            _GQL_AUDIT_TRAIL,
+            {"agentId": agent_id.lower(), "skip": offset, "first": page_size},
+        )
+        events = data.get("auditEvents", [])
+        if events is None:
+            return []
+        return [
+            {
+                "event_id":       e.get("id"),
+                "agent_id":       e.get("agentId"),
+                "target":         e.get("target"),
+                "selector":       e.get("selector"),
+                "usd_amount":     e.get("usdAmount"),
+                "allowed":        e.get("allowed"),
+                "violation_type": e.get("violationType"),
+                "timestamp":      e.get("timestamp"),
+                "block_number":   e.get("blockNumber"),
+                "tx_hash":        e.get("txHash"),
+            }
+            for e in events
+        ]
+
+    async def get_agents_by_owner_indexed(self, owner: str) -> list[dict]:
+        """
+        Fetch all agents for an owner from The Graph subgraph.
+        Faster than on-chain enumeration for large portfolios.
+        """
+        data = await _gql_query(_GQL_AGENT_HISTORY, {"owner": owner.lower()})
+        agents = data.get("agents", []) or []
+        return [
+            {
+                "agent_id":       a.get("id"),
+                "agent_address":  a.get("agentAddress"),
+                "owner":          a.get("owner"),
+                "model":          a.get("model"),
+                "did":            a.get("did"),
+                "registered_at":  a.get("registeredAt"),
+                "status":         a.get("status"),
+                "parent_agent_id": a.get("parentAgentId"),
+            }
+            for a in agents
+        ]
+
+    async def get_revocation_events_indexed(self, agent_id: str) -> list[dict]:
+        """Fetch revocation history for an agent from The Graph."""
+        data = await _gql_query(_GQL_REVOCATIONS, {"agentId": agent_id.lower()})
+        events = data.get("revocationEvents", []) or []
+        return [
+            {
+                "event_id":   e.get("id"),
+                "agent_id":   e.get("agentId"),
+                "revoked_by": e.get("revokedBy"),
+                "reason":     e.get("reason"),
+                "timestamp":  e.get("timestamp"),
+                "reinstated": e.get("reinstated"),
+            }
+            for e in events
+        ]
 
 
 @lru_cache

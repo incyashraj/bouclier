@@ -143,3 +143,56 @@ class Invite(Base):
     __table_args__ = (
         Index("ix_invites_wallet", "invited_wallet"),
     )
+
+
+class AlertRule(Base):
+    """Custom alert rule — triggers a notification when metric crosses threshold."""
+    __tablename__ = "alert_rules"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    organization_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    # Metric: daily_utilization_pct | per_tx_usd | rolling_spend_usd | event_count
+    metric: Mapped[str] = mapped_column(String(50), nullable=False)
+    # Operator: gt | lt | gte | lte | eq
+    operator: Mapped[str] = mapped_column(String(10), nullable=False, default="gt")
+    threshold: Mapped[float] = mapped_column(nullable=False)
+    # Severity: info | warning | critical
+    severity: Mapped[str] = mapped_column(String(20), default="warning")
+    notify_slack: Mapped[bool] = mapped_column(Boolean, default=False)
+    notify_discord: Mapped[bool] = mapped_column(Boolean, default=False)
+    # null = apply to all agents in org
+    agent_id: Mapped[str | None] = mapped_column(String(66))
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    __table_args__ = (
+        Index("ix_alert_rules_org", "organization_id"),
+    )
+
+
+class ReportSchedule(Base):
+    """Scheduled compliance report — runs on a cron expression."""
+    __tablename__ = "report_schedules"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    organization_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    # Jurisdiction: MAS | MiCA | generic
+    jurisdiction: Mapped[str] = mapped_column(String(20), default="generic")
+    # Format: json | csv | pdf
+    format: Mapped[str] = mapped_column(String(10), default="pdf")
+    # Cron expression (5-part, UTC) e.g. "0 8 * * 1" = every Monday 08:00
+    cron: Mapped[str] = mapped_column(String(100), nullable=False)
+    delivery_email: Mapped[str | None] = mapped_column(String(255))
+    # null = all agents
+    agent_id: Mapped[str | None] = mapped_column(String(66))
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    last_run_at: Mapped[datetime | None] = mapped_column(DateTime)
+    next_run_at: Mapped[datetime | None] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    __table_args__ = (
+        Index("ix_report_schedules_org", "organization_id"),
+    )

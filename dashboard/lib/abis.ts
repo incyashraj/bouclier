@@ -150,6 +150,13 @@ export const permissionVaultAbi = [
     outputs: [],
   },
   {
+    name: "emergencyRevoke",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "agentId", type: "bytes32" }],
+    outputs: [],
+  },
+  {
     name: "SCOPE_TYPEHASH",
     type: "function",
     stateMutability: "view",

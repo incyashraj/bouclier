@@ -299,7 +299,127 @@ class BouclierClient:
             ))
         return records
 
-    # ── Internal helpers ─────────────────────────────────────────────────────
+    # ── Sub-agent delegation (Item 5) ────────────────────────────────────────
+
+    def register_child_agent(
+        self,
+        parent_agent_id: str,
+        child_wallet: str,
+        model: str,
+        metadata_cid: str = "",
+    ) -> str:
+        """
+        Register a child agent under a parent.  The parentAgentId is stored
+        on-chain in AgentRegistry for delegation chain traversal.
+        Returns the transaction hash. Requires private_key.
+        """
+        self._require_account()
+        tx = self._agent_reg.functions.register(
+            Web3.to_checksum_address(child_wallet),
+            model,
+            self._b32(parent_agent_id),
+            metadata_cid,
+        ).build_transaction(self._tx_opts())
+        return self._send(tx)
+
+    def get_delegation_chain(self, agent_id: str) -> list[AgentRecord]:
+        """
+        Walk the parentAgentId chain from child to root.
+        Returns an ordered list starting with the given agent.
+        Stops at root (parentAgentId == bytes32(0)) or after 8 hops.
+        """
+        ZERO = "0" * 64
+        chain: list[AgentRecord] = []
+        current = agent_id
+        for _ in range(8):
+            rec = self.resolve_agent(current)
+            chain.append(rec)
+            pid = rec.parent_agent_id
+            if not pid or pid.lstrip("0x").lstrip("0") == "" or pid[2:] == ZERO:
+                break
+            current = pid
+        return chain
+
+    # ── Simulation (Item 6) ──────────────────────────────────────────────────
+
+    def simulate(
+        self,
+        agent_id: str,
+        value_usd: int = 0,
+    ) -> dict:
+        """
+        Dry-run a proposed transaction against the active scope.
+        No transaction is sent; all checks are pure contract reads.
+
+        Checks:
+          1. Agent registered and active
+          2. Not globally revoked
+          3. Active, non-expired scope exists
+          4. Current UTC hour within trade window
+          5. value_usd <= per_tx_spend_cap_usd
+          6. rolling_spend + value_usd <= daily_spend_cap_usd
+
+        Returns:
+            {
+                "allowed": bool,
+                "reason": str,           # "ok" or an error code
+                "utilization": int,      # 0–100 percent of daily cap used
+            }
+        """
+        E18 = 10 ** 18
+
+        # 1. Active check
+        try:
+            active = self.is_agent_active(agent_id)
+        except Exception:
+            active = False
+        if not active:
+            return {"allowed": False, "reason": "AgentNotRegistered", "utilization": 0}
+
+        # 2. Revocation check
+        if self.is_revoked(agent_id):
+            return {"allowed": False, "reason": "AgentRevoked", "utilization": 100}
+
+        # 3. Scope existence and expiry
+        scope = self.get_active_scope(agent_id)
+        if not scope or scope.daily_spend_cap_usd == 0 or scope.revoked:
+            return {"allowed": False, "reason": "NoActiveScope", "utilization": 0}
+        now_sec = int(time.time())
+        if now_sec < scope.valid_from:
+            return {"allowed": False, "reason": "ScopeNotYetValid", "utilization": 0}
+        if now_sec > scope.valid_until:
+            return {"allowed": False, "reason": "ScopeExpired", "utilization": 0}
+
+        # 4. Trade window (UTC hour)
+        import datetime as _dt
+        now_hour = _dt.datetime.now(_dt.timezone.utc).hour
+        win_start, win_end = scope.window_start_hour, scope.window_end_hour
+        if win_start == 0 and win_end == 0:
+            in_window = True  # no restriction
+        elif win_end > win_start:
+            in_window = win_start <= now_hour < win_end
+        else:
+            in_window = now_hour >= win_start or now_hour < win_end
+        if not in_window:
+            return {"allowed": False, "reason": "OutsideTradeWindow", "utilization": 0}
+
+        # 5. Per-tx cap (value_usd in E18 terms)
+        value_wei = value_usd * E18
+        if value_usd > 0 and value_wei > scope.per_tx_spend_cap_usd:
+            return {"allowed": False, "reason": "ExceedsPerTxCap", "utilization": 100}
+
+        # 6. Daily cap
+        rolling = self.get_rolling_spend(agent_id)
+        projected = rolling + value_wei
+        utilization = (
+            min(100, int(projected * 100 // scope.daily_spend_cap_usd))
+            if scope.daily_spend_cap_usd > 0
+            else 0
+        )
+        if projected > scope.daily_spend_cap_usd:
+            return {"allowed": False, "reason": "ExceedsDailyCap", "utilization": utilization}
+
+        return {"allowed": True, "reason": "ok", "utilization": utilization}
 
     def _contract(self, address: str, abi: list) -> Contract:
         return self.w3.eth.contract(

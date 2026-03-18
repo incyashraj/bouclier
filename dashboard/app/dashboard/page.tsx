@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useAccount,
   useReadContract,
@@ -139,6 +139,11 @@ function AgentCard({ agentId, chainId, isSelected, onSelect }: {
     address: addrs.permissionVault, abi: permissionVaultAbi,
     functionName: "getActiveScope", args: [agentId],
   });
+  // Item 1: live spend for mini gauge
+  const { data: rollingSpend } = useReadContract({
+    address: addrs.spendTracker, abi: spendTrackerAbi,
+    functionName: "getRollingSpend", args: [agentId, BigInt(86400)],
+  });
 
   if (!record) {
     return (
@@ -230,6 +235,30 @@ function AgentCard({ agentId, chainId, isSelected, onSelect }: {
           )}
         </div>
       </div>
+
+      {/* ── Item 1: mini spend gauge ── */}
+      {hasScope && !scopeRevoked && (() => {
+        const dailyCap = scope!.dailySpendCapUSD;
+        const spend = (rollingSpend as bigint) ?? 0n;
+        const pct = dailyCap > 0n ? Number((spend * 100n) / dailyCap) : 0;
+        const barColor = pct > 80 ? "bg-red-500" : pct > 50 ? "bg-yellow-500" : "bg-green-500";
+        const lblColor = pct > 80 ? "text-red-600" : pct > 50 ? "text-yellow-600" : "text-green-600";
+        return (
+          <div className="mt-3 pt-3 border-t border-border">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-mono text-text-muted uppercase tracking-widest">24h Spend</span>
+              <span className={`text-[10px] font-mono font-bold ${lblColor}`}>{pct}%</span>
+            </div>
+            <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
+              <div className={`h-full rounded-full transition-all ${barColor}`} style={{ width: `${Math.min(pct, 100)}%` }} />
+            </div>
+            <div className="flex justify-between mt-1 text-[10px] font-mono text-text-muted">
+              <span>{fmtUSD(spend)}</span>
+              <span>{fmtUSD(dailyCap)}</span>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -421,12 +450,40 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
   const [windowEnd, setWindowEnd] = useState("24");
   const [signing, setSigning] = useState(false);
 
+  // Item 4: pre-populate form when active scope loads
+  useEffect(() => {
+    if (scope && scope.dailySpendCapUSD > 0n && !scope.revoked) {
+      setDailyCap(String(Number(scope.dailySpendCapUSD / E18)));
+      setPerTxCap(String(Number(scope.perTxSpendCapUSD / E18)));
+      setAllowAnyProtocol(scope.allowAnyProtocol);
+      setWindowStart(String(scope.windowStartHour));
+      setWindowEnd(String(scope.windowEndHour));
+      const remaining = Math.max(1, Math.ceil((Number(scope.validUntil) - Date.now() / 1000) / 86400));
+      setValidDays(String(remaining));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scope?.dailySpendCapUSD?.toString()]);
+
   const { signTypedDataAsync } = useSignTypedData();
   const { writeContractAsync: writeGrantAsync, data: grantHash, isPending: grantPending, error: grantError, reset: resetGrant } = useWriteContract();
   const { isLoading: grantConfirming, isSuccess: grantConfirmed, isError: grantReverted, error: grantReceiptError } = useWaitForTransactionReceipt({ hash: grantHash });
 
   const { writeContract: writeRevoke, data: revokeHash, isPending: revokePending, error: revokeError } = useWriteContract();
   const { isLoading: revokeConfirming, isSuccess: revokeConfirmed } = useWaitForTransactionReceipt({ hash: revokeHash });
+
+  // Item 2: emergency revoke
+  const [confirmEmergency, setConfirmEmergency] = useState(false);
+  const { writeContract: writeEmergencyRevoke, data: emergencyHash, isPending: emergencyPending, error: emergencyError } = useWriteContract();
+  const { isLoading: emergencyConfirming, isSuccess: emergencyConfirmed } = useWaitForTransactionReceipt({ hash: emergencyHash });
+
+  const handleEmergencyRevoke = () => {
+    writeEmergencyRevoke({
+      address: contracts.permissionVault,
+      abi: permissionVaultAbi,
+      functionName: "emergencyRevoke",
+      args: [agentId],
+    });
+  };
 
   const hasActiveScope = scope && scope.dailySpendCapUSD > 0n && !scope.revoked;
 
@@ -552,20 +609,54 @@ function PermissionsTab({ agentId, chainId }: { agentId: `0x${string}`; chainId:
                 <span className="text-[10px] font-mono ml-2">{revokeHash?.slice(0, 20)}…</span>
               </div>
             ) : (
-              <div className="flex items-center gap-3">
-                <Button
-                  onClick={handleRevoke}
-                  disabled={revokePending || revokeConfirming}
-                  variant="outline"
-                  size="sm"
-                  className="border-red-500/30 text-red-600 hover:bg-red-500 hover:text-white hover:border-red-500 uppercase tracking-widest text-[11px] font-bold"
-                >
-                  {revokePending ? "Signing…" : revokeConfirming ? "Mining…" : "Revoke Entire Scope"}
-                </Button>
-                {revokeError && (
-                  <span className="text-red-500 text-xs font-mono">{(revokeError as any).shortMessage || "Failed"}</span>
+              <>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button
+                    onClick={handleRevoke}
+                    disabled={revokePending || revokeConfirming}
+                    variant="outline"
+                    size="sm"
+                    className="border-red-500/30 text-red-600 hover:bg-red-500 hover:text-white hover:border-red-500 uppercase tracking-widest text-[11px] font-bold"
+                  >
+                    {revokePending ? "Signing…" : revokeConfirming ? "Mining…" : "Revoke Scope"}
+                  </Button>
+
+                  {/* Item 2: emergency revoke with confirmation */}
+                  {!confirmEmergency ? (
+                    <Button
+                      onClick={() => setConfirmEmergency(true)}
+                      variant="outline"
+                      size="sm"
+                      className="border-red-700/40 text-red-700 hover:bg-red-700 hover:text-white hover:border-red-700 uppercase tracking-widest text-[11px] font-bold"
+                    >
+                      <ShieldAlert size={12} className="mr-1.5" /> Emergency Revoke
+                    </Button>
+                  ) : (
+                    <div className="flex items-center gap-2 p-2 border border-red-700/30 bg-red-700/5 rounded-sm">
+                      <span className="text-[10px] font-mono text-red-700">Adds to global revocation list — irreversible. Confirm?</span>
+                      <Button
+                        onClick={handleEmergencyRevoke}
+                        disabled={emergencyPending || emergencyConfirming}
+                        size="sm"
+                        className="bg-red-700 text-white hover:bg-red-800 uppercase tracking-widest text-[10px] font-bold"
+                      >
+                        {emergencyPending ? "Signing…" : emergencyConfirming ? "Mining…" : "Confirm"}
+                      </Button>
+                      <button onClick={() => setConfirmEmergency(false)} className="text-[10px] font-mono text-text-muted hover:text-text">Cancel</button>
+                    </div>
+                  )}
+
+                  {(revokeError || emergencyError) && (
+                    <span className="text-red-500 text-xs font-mono">{((revokeError || emergencyError) as any)?.shortMessage || "Failed"}</span>
+                  )}
+                </div>
+
+                {emergencyConfirmed && (
+                  <div className="mt-3 flex items-center gap-2 text-red-700 font-bold text-sm">
+                    <ShieldAlert size={16} /> Emergency Revoke Executed — agent added to global revocation list.
+                  </div>
                 )}
-              </div>
+              </>
             )}
           </div>
         </div>
@@ -741,8 +832,12 @@ function AuditRow({ eventId, chainId }: { eventId: `0x${string}`; chainId: numbe
   );
 }
 
+const AUDIT_PAGE = 25;
+
 function AuditTab({ agentId, chainId }: { agentId: `0x${string}`; chainId: number }) {
   const addrs = getContracts(chainId);
+  // Item 3: pagination state
+  const [offset, setOffset] = useState(0);
 
   const { data: totalEvents } = useReadContract({
     address: addrs.auditLogger, abi: auditLoggerAbi,
@@ -750,11 +845,13 @@ function AuditTab({ agentId, chainId }: { agentId: `0x${string}`; chainId: numbe
   });
   const { data: eventIds } = useReadContract({
     address: addrs.auditLogger, abi: auditLoggerAbi,
-    functionName: "getAgentHistory", args: [agentId, 0n, 50n],
+    functionName: "getAgentHistory", args: [agentId, BigInt(offset), BigInt(AUDIT_PAGE)],
   });
 
   const ids = (eventIds as `0x${string}`[]) ?? [];
   const total = Number(totalEvents ?? 0);
+  const page = Math.floor(offset / AUDIT_PAGE) + 1;
+  const totalPages = Math.max(1, Math.ceil(total / AUDIT_PAGE));
 
   return (
     <div className="space-y-4">
@@ -762,6 +859,25 @@ function AuditTab({ agentId, chainId }: { agentId: `0x${string}`; chainId: numbe
         <span className="text-[10px] font-mono text-text-muted uppercase tracking-widest">
           {total} Total Event{total !== 1 ? "s" : ""}
         </span>
+        {total > AUDIT_PAGE && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOffset(Math.max(0, offset - AUDIT_PAGE))}
+              disabled={offset === 0}
+              className="px-2 py-1 text-[10px] font-mono border border-border rounded-sm disabled:opacity-30 hover:border-text/30 transition-colors"
+            >
+              ← Prev
+            </button>
+            <span className="text-[10px] font-mono text-text-muted">{page} / {totalPages}</span>
+            <button
+              onClick={() => setOffset(offset + AUDIT_PAGE)}
+              disabled={offset + AUDIT_PAGE >= total}
+              className="px-2 py-1 text-[10px] font-mono border border-border rounded-sm disabled:opacity-30 hover:border-text/30 transition-colors"
+            >
+              Next →
+            </button>
+          </div>
+        )}
       </div>
 
       {ids.length === 0 ? (

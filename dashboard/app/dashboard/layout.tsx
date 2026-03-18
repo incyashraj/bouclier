@@ -14,7 +14,8 @@ const GridCross = ({ className = "" }: { className?: string }) => (
 const links = [
   { href: "/dashboard", label: "My Agents" },
   { href: "/dashboard/grant", label: "New Grant" },
-  { href: "/dashboard/audit", label: "Audit Ledger" }
+  { href: "/dashboard/audit", label: "Audit Ledger" },
+  { href: "/dashboard/team", label: "Team" },
 ];
 
 export default function DashboardLayout({
